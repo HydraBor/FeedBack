@@ -212,14 +212,14 @@ def main():
     parser.add_argument("--port", type=int, default=int(os.getenv("FEEDBACK_PORT", "8765")))
     parser.add_argument("--timeout", type=float, default=30)
     parser.add_argument("--json", action="store_true", help="Machine-readable status")
-    parser.add_argument("--hold", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
     if not 1024 <= args.port <= 65535 or not 0 < args.timeout <= 300:
         parser.error("port must be 1024-65535; timeout must be greater than 0 and at most 300 seconds")
     try:
         if args.action == "stop":
             return stop_project(timeout=args.timeout)
-        process = start_project(port=args.port, timeout=args.timeout) if args.action == "start" else None
+        if args.action == "start":
+            start_project(port=args.port, timeout=args.timeout)
         current = status()
         if args.json:
             print(json.dumps(current))
@@ -231,10 +231,6 @@ def main():
                 print("Log: " + current["log"])
             else:
                 print("Older foreground service; use stop then start to switch to background mode.")
-        if args.hold and process is not None:
-            # Uvicorn re-raises SIGTERM after completing its lifespan cleanup.
-            result = process.wait()
-            return 0 if result == -signal.SIGTERM else result
         return 1 if current["status"] == "stopped" else 0
     except (OSError, RuntimeError) as exc:
         print(str(exc), file=sys.stderr)

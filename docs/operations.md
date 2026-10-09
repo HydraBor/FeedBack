@@ -2,7 +2,7 @@
 
 [返回项目说明](../README.md) · [使用手册](user-guide.md) · [开发说明](development.md)
 
-命令除明确标注 PowerShell 外，均在项目根目录的 Ubuntu / WSL 终端执行。当前运行方式为 Windows + Ubuntu WSL：后端与周老师 OJ 采集器在 Linux，ACGO 使用专用 Windows Edge。WSL 中检测到标准路径的 Windows Node 时，ACGO 子进程优先使用它，否则使用 Linux Node。后端使用 Linux 文件锁，不能直接当作原生 Windows Python 项目启动。
+项目通过 Linux 脚本启动和关闭，命令除明确标注 PowerShell 外，均在项目根目录的 Linux / Ubuntu WSL 终端执行。当前电脑的后端与周老师 OJ 采集器在 Linux，ACGO 使用专用 Windows Edge。WSL 中检测到标准路径的 Windows Node 时，ACGO 子进程优先使用它，否则使用 Linux Node。后端使用 Linux 文件锁，不能直接当作原生 Windows Python 项目启动。
 
 ## 新环境安装
 
@@ -22,38 +22,25 @@ ACGO 连接 Windows Edge 的新电脑还应在 Windows 安装 Node.js 20+ 到标
 
 ## 启动、关闭与迁移目录
 
-当前 Windows 入口：
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\feedback.ps1 start
-powershell -ExecutionPolicy Bypass -File .\feedback.ps1 stop
-powershell -ExecutionPolicy Bypass -File .\feedback.ps1 status
-```
-
-统一入口 `feedback.ps1` 用 `start`、`stop`、`status` 控制服务；不传参数时显示状态。`start` 创建独立的隐藏 WSL 宿主和后台服务，启动完成后命令返回，关闭终端后仍运行，直到执行 `stop`。电脑重启、终止整个 WSL 发行版或 `wsl --shutdown` 也会结束服务；本脚本不设置开机自启。
-
-脚本从 `\\wsl.localhost\发行版\...` 或 `\\wsl$\发行版\...` 路径识别发行版和项目目录；在 Windows 磁盘目录下通过 `wslpath` 转换，发行版默认 Ubuntu。需要指定发行版时，在执行前设置 PowerShell 的 `$env:FEEDBACK_WSL_DISTRO`。目录可含空格。Windows 下推荐此入口，独立 WSL 宿主会保留 ACGO 调用 Windows Node 与 Edge 所需的互操作环境。
-
-Linux / WSL 终端也可使用服务控制程序：
+在 Linux / WSL 终端执行：
 
 ```bash
-.venv/bin/python scripts/service.py start
-.venv/bin/python scripts/service.py stop
-.venv/bin/python scripts/service.py status
+./feedback.sh start
+./feedback.sh stop
+./feedback.sh status
 ```
 
-重复 `start` 不会多开服务，重复 `stop` 可以安全执行。旧版前台服务首次切换时先 `stop` 再 `start`；脚本不会把旧前台进程冒充后台服务。关闭时核对当前目录及服务命令，通过进程句柄请求正常退出；其他项目不会被关闭，也不按端口强杀。默认最多等待 30 秒，超时会提示仍在收尾，可增加等待时间。已保存材料与分析阶段保留，重启后可恢复中断分析；专用 Edge 登录窗口可继续保留。
+统一入口 `feedback.sh` 用 `start`、`stop`、`status` 控制服务，不传参数时默认启动；`./feedback.sh --help` 查看选项。`start` 将服务与终端会话分离，输入连接到 `/dev/null`，输出写入日志；启动就绪后命令返回，关闭终端后仍运行，直到执行 `stop`。电脑重启、终止整个 WSL 发行版或 `wsl --shutdown` 也会结束服务；本脚本不设置开机自启。
+
+脚本按自身位置确定项目目录，可从任何工作目录调用，路径可含空格。例如：`/home/algor/feedback/feedback.sh start`。安装依赖或前端构建缺失时会明确提示先运行安装脚本。Git 保存了执行权限；如果通过不保留权限的工具复制项目，可执行 `chmod +x feedback.sh`，或直接用 `bash feedback.sh start`。
+
+重复 `start` 不会多开服务，重复 `stop` 可以安全执行。旧版前台服务首次切换时先 `stop` 再 `start`；脚本不会把旧前台进程冒充后台服务。关闭时核对项目目录及服务命令，通过进程句柄请求正常退出；其他项目不会被关闭，也不按端口强杀。默认最多等待 30 秒，超时会提示仍在收尾，可增加等待时间。已保存材料与分析阶段保留，重启后可恢复中断分析；专用 Edge 登录窗口可继续保留。
 
 端口只在新启动时生效；更换端口先关闭原服务。示例：
 
-```powershell
-powershell -ExecutionPolicy Bypass -File .\feedback.ps1 start -Port 8766
-powershell -ExecutionPolicy Bypass -File .\feedback.ps1 stop -Timeout 60
-```
-
 ```bash
-.venv/bin/python scripts/service.py start --port 8766
-.venv/bin/python scripts/service.py stop --timeout 60
+./feedback.sh start --port 8766
+./feedback.sh stop --timeout 60
 ```
 
 此时访问 `http://localhost:8766/`。前端开发代理和检查脚本默认使用 8765，改端口时同步核对。服务标准输出和错误写入 `.run/service.log`，重新启动时上一份日志保留为 `.run/service.previous.log`；状态与锁文件也在 `.run/`，不进入 Git 或档案备份。不要在服务运行时删除该目录。启动失败先查日志；端口已被其他程序占用时会报错，不关闭那个程序。
@@ -73,8 +60,7 @@ powershell -ExecutionPolicy Bypass -File .\feedback.ps1 stop -Timeout 60
 | `DEEPSEEK_TIMEOUT` | 120 秒 | 单次 HTTP 请求超时；改环境后重启 |
 | `DEEPSEEK_MAX_CALLS` | 48 | 基础调用预算；报告按题量、恢复阶段自动扩展，不是固定题数上限 |
 | `FEEDBACK_DATA_DIR` | `data/private/` | 私有档案及设置目录；修改后重启 |
-| `FEEDBACK_PORT` | 8765 | Linux 控制程序的 shell 环境默认值；显式 `--port` 优先，PowerShell 使用 `-Port`；不从 `.env` 读取 |
-| `FEEDBACK_WSL_DISTRO` | WSL UNC 路径中的发行版，否则 Ubuntu | Windows PowerShell 启动环境；不从 `.env` 读取 |
+| `FEEDBACK_PORT` | 8765 | Linux shell 环境默认值；`./feedback.sh start --port` 优先；不从 `.env` 读取 |
 
 页面保存的设置在私有目录的 `settings.json`，页面不回显 API 密钥。只改模型或并发数不会把根目录密钥复制进去；主动填写密钥才会保存。已有设置密钥继续优先，想一直用根目录文件时，不要再在页面填写另一份。
 
@@ -120,9 +106,9 @@ FEEDBACK_DATA_DIR=/home/algor/feedback-restored
 
 | 现象 | 检查与处理 |
 | --- | --- |
-| 启动找不到 `.venv` 或前端未构建 | 在 Linux 根目录执行 `bash scripts/setup.sh`；确认 `feedback.ps1` 路径 |
-| 提示旧前台服务仍在运行 | 在当前项目目录先执行 `feedback.ps1 stop`，再 `feedback.ps1 start` |
-| 8765 已占用 | 查看 `.run/service.log` 与 `feedback.ps1 status`，核对服务或改端口；不要同时运行多个实例 |
+| 启动找不到 `.venv` 或前端未构建 | 在 Linux 项目目录执行 `bash scripts/setup.sh`；确认 `feedback.sh` 路径 |
+| 提示旧前台服务仍在运行 | 在当前项目目录先执行 `./feedback.sh stop`，再 `./feedback.sh start` |
+| 8765 已占用 | 查看 `.run/service.log` 与 `./feedback.sh status`，核对服务或改端口；不要同时运行多个实例 |
 | 读取作品按钮灰色 | 新建反馈页需选学生、填写起止日期、平台学生 / 团队 / 比赛编号；按按钮下方缺项提示补齐 |
 | ACGO 找不到浏览器 | 手动执行专用 Edge 脚本；核对 9223、Node 环境及 WSL 到 Windows 的连接 |
 | ACGO 权限 / 登录错误 | 在专用窗口重新登录，确认能查看所选学生代码；不要用其他浏览器登录代替 |

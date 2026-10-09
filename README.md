@@ -6,7 +6,7 @@
 
 ## 安装与启动
 
-推荐 Windows + Ubuntu WSL。在 Ubuntu 终端克隆并安装（系统依赖、Windows Node 与 Edge 要求见[维护手册](docs/operations.md#新环境安装)）：
+项目在 Linux / Ubuntu WSL 中运行。在 Linux 终端克隆并安装（系统依赖，以及 WSL 下 ACGO 使用的 Windows Node 与 Edge 要求见[维护手册](docs/operations.md#新环境安装)）：
 
 ```bash
 git clone https://github.com/HydraBor/FeedBack.git feedback
@@ -16,25 +16,17 @@ bash scripts/setup.sh
 
 首次真实分析前配置自己的 DeepSeek 密钥；没有密钥也可使用明确标记的演示模式检查流程。
 
-在项目目录的 Windows PowerShell 中执行：
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\feedback.ps1 start
-powershell -ExecutionPolicy Bypass -File .\feedback.ps1 stop
-powershell -ExecutionPolicy Bypass -File .\feedback.ps1 status
-```
-
-`start` 在后台启动，关闭终端后仍运行；`stop` 正常关闭，`status` 查看状态。打开 [教学工作台](http://localhost:8765/)。重复启动不会多开服务，日志保存在 `.run/service.log`。旧版前台服务首次切换时，先执行 `stop`，再执行 `start`。
-
-Ubuntu / WSL 终端使用同一服务控制程序：
+在项目目录的 Linux / WSL 终端执行：
 
 ```bash
-.venv/bin/python scripts/service.py start
-.venv/bin/python scripts/service.py stop
-.venv/bin/python scripts/service.py status
+./feedback.sh start
+./feedback.sh stop
+./feedback.sh status
 ```
 
-Windows 下推荐 PowerShell 入口，它还会保留独立的 WSL 宿主供 ACGO 调用 Windows Node 与 Edge。脚本自动识别项目目录，只关闭该目录的服务；已保存档案和分析阶段保留。端口、超时和日志说明见[维护手册](docs/operations.md#启动关闭与迁移目录)。
+不传参数直接执行 `./feedback.sh` 也会启动。`start` 在后台启动，关闭终端后仍运行；`stop` 正常关闭，`status` 查看状态。打开 [教学工作台](http://localhost:8765/)。重复启动不会多开服务，日志保存在 `.run/service.log`。旧版前台服务首次切换时，先执行 `stop`，再执行 `start`。
+
+脚本自动识别项目目录，也可从其他目录通过绝对路径执行；只关闭该项目的服务，已保存档案和分析阶段保留。电脑重启或关闭整个 WSL 会结束服务。端口、超时和日志说明见[维护手册](docs/operations.md#启动关闭与迁移目录)。
 
 DeepSeek 密钥可继续放在根目录的 `deepseek` 文件。读取顺序为 **本地设置 → 环境变量 → 根目录文件**；修改并发数或模型不会自动复制文件密钥。已有本地设置密钥仍有优先权，详见[配置说明](docs/operations.md#密钥与配置)。
 

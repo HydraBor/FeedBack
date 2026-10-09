@@ -91,9 +91,9 @@ npm --prefix frontend run build
 `scripts/check_report_period_ui.py` 自带临时数据库、独立端口和模拟 AI，可以在正式服务运行时执行：`.venv/bin/python scripts/check_report_period_ui.py`。验证更新文案不新增记录、同一期复用 ID、修改材料重置分析、确认版本保留，不读写真实学生库或调用外部 AI。
 
 ```bash
-FEEDBACK_DATA_DIR="$PWD/tmp/ui-check-data" .venv/bin/python scripts/service.py start
+FEEDBACK_DATA_DIR="$PWD/tmp/ui-check-data" ./feedback.sh start
 # 完成检查后正常关闭；更改环境变量前同样需要重启。
-.venv/bin/python scripts/service.py stop
+./feedback.sh stop
 ```
 
 自动测试通过不能覆盖未来 OJ 页面变化或所有模型返回。新改动只运行与其有关的必要检查；涉及 PDF 布局时运行 `check_pdf.py` 并查看实际渲染，不能仅凭页数通过。

@@ -9,4 +9,4 @@ npm --prefix frontend ci
 npm --prefix integrations/acgo ci --ignore-scripts
 npm --prefix frontend run build
 .venv/bin/python -m playwright install chromium
-echo 'Setup complete. Run: .venv/bin/python scripts/service.py start'
+echo 'Setup complete. Run: ./feedback.sh start'

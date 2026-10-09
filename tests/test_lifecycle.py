@@ -105,11 +105,20 @@ def test_background_start_survives_launcher_exit_and_is_repeatable(tmp_path):
     root = tmp_path / "project with spaces"
     write_app(root)
     (root / "scripts").mkdir()
-    shutil.copyfile(Path(__file__).resolve().parents[1] / "scripts/service.py", root / "scripts/service.py")
+    source = Path(__file__).resolve().parents[1]
+    shutil.copyfile(source / "scripts/service.py", root / "scripts/service.py")
+    launcher = root / "feedback.sh"
+    shutil.copyfile(source / "feedback.sh", launcher)
+    launcher.chmod(0o755)
+    (root / ".venv").symlink_to(sys.prefix, target_is_directory=True)
+    (root / "frontend/dist").mkdir(parents=True)
+    (root / "frontend/dist/index.html").write_text("<html></html>")
+    port = free_port()
     try:
+        # Default start, from outside the checkout, with spaces in its path.
         result = subprocess.run(
-            [sys.executable, "scripts/service.py", "start", "--port", str(free_port())],
-            cwd=root, capture_output=True, text=True, timeout=15,
+            [str(launcher)], env={**os.environ, "FEEDBACK_PORT": str(port)},
+            cwd=tmp_path, capture_output=True, text=True, timeout=15,
         )
         assert result.returncode == 0, result.stderr
         current = status(root)
@@ -117,9 +126,17 @@ def test_background_start_survives_launcher_exit_and_is_repeatable(tmp_path):
         assert os.getsid(current["pid"]) == current["pid"]
         assert (Path("/proc") / str(current["pid"]) / "fd/0").readlink() == Path("/dev/null")
         assert (Path("/proc") / str(current["pid"]) / "fd/1").readlink() == root / ".run/service.log"
-        assert start_project(root, port=current["port"]) is None
+        repeated = subprocess.run(
+            [str(launcher), "start", "--port", str(port)],
+            cwd=tmp_path, capture_output=True, text=True, timeout=15,
+        )
+        assert repeated.returncode == 0, repeated.stderr
         assert status(root)["pid"] == current["pid"]
-        assert stop_project(root, timeout=10) == 0
+        stopped = subprocess.run(
+            [str(launcher), "stop", "--timeout", "10"],
+            cwd=tmp_path, capture_output=True, text=True, timeout=15,
+        )
+        assert stopped.returncode == 0, stopped.stderr
         assert (root / "clean-shutdown").exists()
         assert status(root)["status"] == "stopped"
         original_log = (root / ".run/service.log").read_bytes()
@@ -130,6 +147,17 @@ def test_background_start_survives_launcher_exit_and_is_repeatable(tmp_path):
         restarted.wait(timeout=2)
     finally:
         stop_project(root, timeout=10)
+
+
+def test_shell_launcher_explains_missing_installation(tmp_path):
+    launcher = tmp_path / "feedback.sh"
+    shutil.copyfile(Path(__file__).resolve().parents[1] / "feedback.sh", launcher)
+    launcher.chmod(0o755)
+    result = subprocess.run([str(launcher), "--help"], capture_output=True, text=True)
+    assert result.returncode == 0
+    result = subprocess.run([str(launcher)], capture_output=True, text=True)
+    assert result.returncode == 2 and "bash scripts/setup.sh" in result.stderr
+    assert not (tmp_path / ".run").exists()
 
 
 def test_busy_port_does_not_report_unrelated_healthy_service_as_started(tmp_path):
