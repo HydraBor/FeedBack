@@ -254,8 +254,6 @@ def review(fid: str, data: ReviewInput, confirm: bool = False):
         raise ValueError("政策来源必须保留已核实的官方引用")
     practice.validate_recommendations(content, entry["stages"].get("collections_snapshot"))
     warnings = validate_parent(content, entry["input"])
-    if confirm and warnings:
-        raise ValueError("请先处理文案提示：" + "；".join(warnings))
     overrides = [k for k in content if content[k] != entry["analysis"].get("scoring", {}).get(k, entry["draft"].get(k))]
     result = db.save_review(fid, data.revision, content,
         {"versions": entry["analysis"]["versions"], "teacher_adjusted_fields": overrides, "confirmed_at": db.now(), "demo": entry["input"]["mode"] == "demo"}, confirm)

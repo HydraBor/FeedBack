@@ -142,6 +142,8 @@ const body = {revision: detail.revision, report: editedDraft};
 
 普通保存更新草稿；`?confirm=true` 校验评分、题单与文案并新增版本，返回的 `versions` 包含 `id` 和 `revision`。下载用确认版 `id`，不是报告 ID 或 revision。POST 预览使用相同审核外层结构，返回 HTML，不保存、不确认。
 
+家长用词与表达检查返回 `warnings`，属于讲师手动修改的提醒，不让分析失败或自动重写，不阻止确认。JSON 结构、评分证据、题单来源和所选组别等约束仍会拒绝无效内容。恢复因旧文风检查而失败的报告时，复用已保存的完整、结构有效的家长回复及分析阶段，不为措辞重复调用 AI。
+
 ## 设置、资料与错误
 
 保存周老师 OJ 连接可提交 `admin_url`（含 key），或 `base_url` 加 `admin_key`。不要把真实密钥写入接口示例、命令历史或报告链接。读取连接只返回站点与是否配置。

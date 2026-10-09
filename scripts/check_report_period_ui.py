@@ -32,7 +32,7 @@ async def check(directory):
                 return {'horizon':'近期练习','recent':[{'title':'独立练习','activity':'练习相近的新题。',
                     'success':'能说清自己的做法。','evidence':['current:topics'],'collection_id':'','practice_mode':'new'}],'phases':[]}
             assert schema.__name__=='ParentCopy'
-            return {'summary':'这段时间，{{student}}完成了课堂练习，能读懂题目要求，把自己的想法写成程序。',
+            return {'summary':'这段时间，{{student}}完成了课堂任务，表现较稳，能读懂题目要求，把自己的想法写成程序。',
                 'highlights':['能抓住题目的关键要求，安排好需要完成的步骤。'],'next_steps':['接下来练习相近的新题，完成后由讲师带着复盘。']}
 
     pipeline.DeepSeek=Provider
@@ -71,15 +71,21 @@ async def check(directory):
                     await page.goto(base+'/?report='+report['id'])
                     await page.get_by_role('button',name='更新建议与文案',exact=True).click()
                     await page.wait_for_function("document.querySelector('.page-title .pill')?.textContent === '待审核'")
+                    await page.get_by_text('文案提醒（不影响生成、保存和确认）',exact=True).wait_for()
                     assert len(db.list_feedbacks())==1 and db.versions(report['id'])==originals
                     assert db.feedback(report['id'])['analysis']['copy_refreshes']
+                    await page.get_by_role('button',name='确认并归档',exact=True).click()
+                    await page.get_by_text('已确认并归档，可下载 PDF',exact=True).wait_for()
+                    assert len(db.versions(report['id']))==len(originals)+1
+                    assert db.versions(report['id'])[-1]==originals[-1]
+                    preserved_versions=db.versions(report['id'])
                     await page.get_by_role('button',name='返回反馈列表',exact=True).click()
                     await page.locator('[data-report-id]').wait_for()
                     assert await page.locator('[data-report-id]').count()==1
                     assert 'CSP-J / CSP-S' in await page.locator('[data-report-id]').inner_text()
                     # The creation API must reuse a completed report without restarting it.
                     response=await client.post('/api/reports',json=data)
-                    assert response.json()['id']==report['id'] and response.json()['status']=='review'
+                    assert response.json()['id']==report['id'] and response.json()['status']=='confirmed'
                     await page.locator('[data-report-id]').click()
                     await page.get_by_role('button',name='修改本期材料',exact=True).click()
                     assert await page.get_by_label('学习开始日期').is_disabled()
@@ -90,7 +96,7 @@ async def check(directory):
                     changed=db.feedback(report['id'])
                     assert changed['status']=='draft' and changed['input']['supplements']=='补充本期课堂观察'
                     assert changed['analysis'] is None and len(db.list_feedbacks())==1
-                    assert db.versions(report['id'])==originals
+                    assert db.versions(report['id'])==preserved_versions
                     assert any(method=='POST' and url.endswith('/rewrite') for method,url in writes)
                     assert not any(method=='POST' and url.endswith('/api/reports') for method,url in writes)
                     assert not errors,errors

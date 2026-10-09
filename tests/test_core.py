@@ -132,6 +132,30 @@ def test_parent_grade_only_and_style():
     report["summary"] = "表现很稳"
     assert validate_parent(report, data)
 
+
+def test_wording_warnings_allow_confirmation_and_clear_after_manual_edit(database):
+    student=db.save_student(profile())
+    data=payload(student['id'])
+    entry=db.create_feedback(data)
+    content=draft(data);content['summary']='完成了本期任务，表现较稳。'
+    db.update_feedback(entry['id'],status='review',draft=content,analysis={
+        'scoring':{'topic_scores':content['topic_scores'],'abilities':content['abilities']},
+        'admissions':{'sources':[]},'versions':{}})
+    client=TestClient(app,base_url='http://localhost')
+    path='/api/reports/'+entry['id']+'/review?confirm=true'
+    result=client.put(path,json={'revision':0,'report':content})
+    assert result.status_code==200,result.text
+    confirmed=result.json()
+    assert confirmed['status']=='confirmed' and len(confirmed['versions'])==1
+    assert any('稳' in warning for warning in confirmed['warnings'])
+    assert any('任务' in warning for warning in confirmed['warnings'])
+    corrected={**content,'summary':'完成了本期题目，能读懂要求并把想法写成程序。'}
+    result=client.put(path,json={'revision':confirmed['revision'],'report':corrected})
+    assert result.status_code==200 and not result.json()['warnings']
+    assert db.versions(entry['id'])[-1]['content']['summary']==content['summary']
+    invalid={**corrected,'summary':'学生13岁，完成了本期题目。'}
+    assert client.put(path,json={'revision':result.json()['revision'],'report':invalid}).status_code==400
+
 def reference():
     return {"rule": {"year": 2025, "track": "J", "thresholds": [270, 205, 130]}, "problems": [{"id": str(i), "max_score": 100} for i in range(4)]}
 

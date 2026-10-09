@@ -71,7 +71,7 @@ def test_actual_deepseek_messages_use_the_approved_voice_without_analyst_example
     assert '必须用输入材料的真实编号' in internal
 
 
-def test_initial_generation_and_rewrite_retry_in_the_same_approved_voice(tmp_path,monkeypatch):
+def test_generation_rewrite_and_resume_keep_editorial_warnings_without_retry(tmp_path,monkeypatch):
     monkeypatch.setattr(db,'DATABASE',tmp_path/'feedback.sqlite3');db.init_db()
     student=db.save_student({'name':'测试同学','age':13,'grade':'初二','acgo_user_id':''})
     data=FeedbackInput(student_id=student['id'],start_date='2026-10-01',end_date='2026-10-05',target_year=2026,tracks=['J'],
@@ -91,13 +91,16 @@ def test_initial_generation_and_rewrite_retry_in_the_same_approved_voice(tmp_pat
             self.calls+=1;instructions.append(instruction)
             copy={'summary':'本期完成了练习，能把自己的想法写成程序。','highlights':['能抓住题目的关键要求，并按要求得出结果。'],
                 'next_steps':['未来两周选几道相近的新题，先说清准备怎么做，再独立完成。']}
-            if self.calls==1:copy['summary']='本期核实到完成了一道综合任务。'
+            copy['summary']='本期核实到完成了一道综合任务，表现较稳。'
             return copy
     monkeypatch.setattr(pipeline,'DeepSeek',FakeProvider)
     monkeypatch.setattr(knowledge,'references',lambda tracks:[])
     asyncio.run(pipeline.generate(entry['id']))
     first=db.feedback(entry['id'])
     assert first['status']=='review',first['error']
+    assert first['draft']['summary']=='本期核实到完成了一道综合任务，表现较稳。'
+    assert any('任务' in warning for warning in first['stages']['parent_warnings'])
+    assert any('稳' in warning for warning in first['stages']['parent_warnings'])
     assert first['analysis']['versions']['parent_style']==STYLE_ID
     scores=deepcopy(first['draft']['topic_scores']);positions=deepcopy(first['draft']['positions'])
     confirmed=db.save_review(entry['id'],first['revision'],first['draft'],{},True)
@@ -114,10 +117,25 @@ def test_initial_generation_and_rewrite_retry_in_the_same_approved_voice(tmp_pat
     assert len(db.students())==1 and db.feedback(sibling['id'])==sibling
     assert db.versions(entry['id'])==original_versions
     assert second['analysis']['copy_refreshes'][-1]['parent_style']==STYLE_ID
-    assert len(instructions)==4
-    assert instructions[0]==instructions[2]
+    assert len(instructions)==2
+    assert instructions[0]==instructions[1]
     for instruction in instructions:
         assert instruction.startswith(pipeline.STYLE_RULE)
         assert '读题时能抓住关键要求' in instruction
         assert '逐项核对给定的编号' not in instruction
-    assert '按A版的自然讲师口吻重新组织' in instructions[1] and instructions[1]==instructions[3]
+        assert '下一阶段建议全部遵循同一用词要求' in instruction
+    # Old failures retain a complete reply; resuming must reuse it and all analysis.
+    stages=deepcopy(second['stages']);stages.pop('parent_copy')
+    stages.update(copy_prompt_version='feedback-2026-10-09-v19',last_validation_error={
+        'phase':'parent_copy','message':'含有稳类程度词','response':deepcopy(second['draft'])})
+    stages['last_validation_error']['response']={k:second['draft'][k] for k in ('summary','highlights','next_steps')}
+    db.update_feedback(entry['id'],status='failed',draft=None,analysis=None,stages=stages,error='旧措辞拦截')
+    async def no_request(*args,**kwargs):raise AssertionError('Valid cached results must not call AI again')
+    monkeypatch.setattr(FakeProvider,'generate',no_request)
+    asyncio.run(pipeline.generate(entry['id']))
+    recovered=db.feedback(entry['id'])
+    assert recovered['status']=='review' and recovered['error'] is None
+    assert recovered['draft']['summary']==second['draft']['summary']
+    assert recovered['stages']['parent_copy_recovered_from_validation'] is True
+    assert recovered['stages']['training']==stages['training']
+    assert recovered['stages']['parent_warnings']
