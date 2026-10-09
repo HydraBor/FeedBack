@@ -1,0 +1,462 @@
+{
+  "version": "2026-10-09-r2",
+  "events": [
+    {
+      "year": 2026,
+      "first_date": "2026-09-19",
+      "second_date": "2026-10-31",
+      "minimum_age": 12,
+      "age_cutoff": "2026-09-01",
+      "cutoff_exclusive": true,
+      "source": "https://www.noi.cn/xw/2026-09-29/933744.shtml",
+      "eligibility_source": "https://www.noi.cn/xw/2026-07-06/908222.shtml"
+    }
+  ],
+  "grade_lines": [
+    {
+      "year": 2019,
+      "province": "广东",
+      "stage": "second",
+      "track": "J",
+      "thresholds": [
+        250,
+        100,
+        70
+      ],
+      "source": "https://www.noi.cn/xw/2019-12-09/715511.shtml",
+      "reviewed": true,
+      "complete_grade_lines": true,
+      "reviewed_at": "2026-10-09",
+      "verification": "一等线取CCF广东分省标准；二、三等全国基准与CCF最终名单中的广东最低获评成绩一致，确认广东未上调。六份正式评级名单逐项交叉核对。",
+      "duration_minutes": 210,
+      "sessions": [
+        {
+          "day": 1,
+          "duration_minutes": 210,
+          "problem_indices": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "format_source": "https://www.noi.cn/xw/2019-10-28/715431.shtml",
+      "verification_sources": [
+        "https://www.noi.cn/xw/2019-12-09/715511.shtml",
+        "https://www.noi.cn/hjmd/mdgs/2019/2019-12-11/710402.shtml",
+        "https://www.noi.cn/ccf/file/do?fid=3DaqgQGR&attach=n",
+        "https://www.noi.cn/ccf/file/do?fid=d5R35mMG&attach=n",
+        "https://www.noi.cn/ccf/file/do?fid=GafMyBr2&attach=n"
+      ],
+      "verification_evidence": "verification/2019-guangdong-grade-lines.json"
+    },
+    {
+      "year": 2019,
+      "province": "广东",
+      "stage": "second",
+      "track": "S",
+      "thresholds": [
+        255,
+        110,
+        80
+      ],
+      "source": "https://www.noi.cn/xw/2019-12-09/715511.shtml",
+      "reviewed": true,
+      "complete_grade_lines": true,
+      "reviewed_at": "2026-10-09",
+      "verification": "一等线取CCF广东分省标准；二、三等全国基准与CCF最终名单中的广东最低获评成绩一致，确认广东未上调。六份正式评级名单逐项交叉核对。",
+      "duration_minutes": 420,
+      "sessions": [
+        {
+          "day": 1,
+          "duration_minutes": 210,
+          "problem_indices": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "day": 2,
+          "duration_minutes": 210,
+          "problem_indices": [
+            4,
+            5,
+            6
+          ]
+        }
+      ],
+      "format_source": "https://www.noi.cn/xw/2019-10-28/715431.shtml",
+      "verification_sources": [
+        "https://www.noi.cn/xw/2019-12-09/715511.shtml",
+        "https://www.noi.cn/hjmd/mdgs/2019/2019-12-11/710402.shtml",
+        "https://www.noi.cn/ccf/file/do?fid=tTEH4Etf&attach=n",
+        "https://www.noi.cn/ccf/file/do?fid=FYq6T8g5&attach=n",
+        "https://www.noi.cn/ccf/file/do?fid=HjTeYfLd&attach=n"
+      ],
+      "verification_evidence": "verification/2019-guangdong-grade-lines.json"
+    },
+    {
+      "year": 2020,
+      "province": "广东",
+      "stage": "second",
+      "track": "J",
+      "thresholds": [
+        230,
+        100,
+        60
+      ],
+      "source": "https://www.noi.cn/xw/2020-12-01/717616.shtml",
+      "reviewed": true,
+      "complete_grade_lines": true,
+      "reviewed_at": "2026-10-09",
+      "verification": "CCF/NOI对应年度第二轮评级规则：广东一等线与适用的二三等规则交叉核对",
+      "duration_minutes": 210,
+      "sessions": [
+        {
+          "day": 1,
+          "duration_minutes": 210,
+          "problem_indices": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "format_source": "https://www.noi.cn/xw/2020-10-22/715714.shtml"
+    },
+    {
+      "year": 2020,
+      "province": "广东",
+      "stage": "second",
+      "track": "S",
+      "thresholds": [
+        150,
+        65,
+        30
+      ],
+      "source": "https://www.noi.cn/xw/2020-12-01/717616.shtml",
+      "reviewed": true,
+      "complete_grade_lines": true,
+      "reviewed_at": "2026-10-09",
+      "verification": "CCF/NOI对应年度第二轮评级规则：广东一等线与适用的二三等规则交叉核对",
+      "duration_minutes": 240,
+      "sessions": [
+        {
+          "day": 1,
+          "duration_minutes": 240,
+          "problem_indices": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "format_source": "https://www.noi.cn/xw/2020-10-22/715714.shtml"
+    },
+    {
+      "year": 2021,
+      "province": "广东",
+      "stage": "second",
+      "track": "J",
+      "thresholds": [
+        277,
+        100,
+        70
+      ],
+      "source": "https://www.noi.cn/xw/2021-11-05/749734.shtml",
+      "reviewed": true,
+      "complete_grade_lines": true,
+      "reviewed_at": "2026-10-09",
+      "verification": "CCF/NOI对应年度第二轮评级规则：广东一等线与适用的二三等规则交叉核对",
+      "duration_minutes": 210,
+      "sessions": [
+        {
+          "day": 1,
+          "duration_minutes": 210,
+          "problem_indices": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "format_source": "https://www.noi.cn/xw/2021-08-02/732829.shtml"
+    },
+    {
+      "year": 2021,
+      "province": "广东",
+      "stage": "second",
+      "track": "S",
+      "thresholds": [
+        125,
+        50,
+        30
+      ],
+      "source": "https://www.noi.cn/xw/2021-11-05/749734.shtml",
+      "reviewed": true,
+      "complete_grade_lines": true,
+      "reviewed_at": "2026-10-09",
+      "verification": "CCF/NOI对应年度第二轮评级规则：广东一等线与适用的二三等规则交叉核对",
+      "duration_minutes": 240,
+      "sessions": [
+        {
+          "day": 1,
+          "duration_minutes": 240,
+          "problem_indices": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "format_source": "https://www.noi.cn/xw/2021-08-02/732829.shtml"
+    },
+    {
+      "year": 2022,
+      "province": "广东",
+      "stage": "second",
+      "track": "J",
+      "thresholds": [
+        225,
+        105,
+        85
+      ],
+      "source": "https://www.noi.cn/xw/2022-11-17/777448.shtml",
+      "reviewed": true,
+      "complete_grade_lines": true,
+      "reviewed_at": "2026-10-09",
+      "verification": "CCF/NOI对应年度第二轮评级规则：广东一等线与适用的二三等规则交叉核对",
+      "duration_minutes": 210,
+      "sessions": [
+        {
+          "day": 1,
+          "duration_minutes": 210,
+          "problem_indices": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "format_source": "https://www.noi.cn/gs/xw/gd/2022-10-01/774918.shtml"
+    },
+    {
+      "year": 2022,
+      "province": "广东",
+      "stage": "second",
+      "track": "S",
+      "thresholds": [
+        190,
+        70,
+        50
+      ],
+      "source": "https://www.noi.cn/xw/2022-11-17/777448.shtml",
+      "reviewed": true,
+      "complete_grade_lines": true,
+      "reviewed_at": "2026-10-09",
+      "verification": "CCF/NOI对应年度第二轮评级规则：广东一等线与适用的二三等规则交叉核对",
+      "duration_minutes": 240,
+      "sessions": [
+        {
+          "day": 1,
+          "duration_minutes": 240,
+          "problem_indices": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "format_source": "https://www.noi.cn/gs/xw/gd/2022-10-01/774918.shtml"
+    },
+    {
+      "year": 2023,
+      "province": "广东",
+      "stage": "second",
+      "track": "J",
+      "thresholds": [
+        210,
+        90,
+        40
+      ],
+      "source": "https://www.noi.cn/xw/2023-11-15/798182.shtml",
+      "reviewed": true,
+      "complete_grade_lines": true,
+      "reviewed_at": "2026-10-09",
+      "verification": "CCF/NOI对应年度第二轮评级规则：广东一等线与适用的二三等规则交叉核对",
+      "duration_minutes": 210,
+      "sessions": [
+        {
+          "day": 1,
+          "duration_minutes": 210,
+          "problem_indices": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "format_source": "https://www.noi.cn/xw/2023-09-16/795625.shtml"
+    },
+    {
+      "year": 2023,
+      "province": "广东",
+      "stage": "second",
+      "track": "S",
+      "thresholds": [
+        150,
+        80,
+        55
+      ],
+      "source": "https://www.noi.cn/xw/2023-11-15/798182.shtml",
+      "reviewed": true,
+      "complete_grade_lines": true,
+      "reviewed_at": "2026-10-09",
+      "verification": "CCF/NOI对应年度第二轮评级规则：广东一等线与适用的二三等规则交叉核对",
+      "duration_minutes": 240,
+      "sessions": [
+        {
+          "day": 1,
+          "duration_minutes": 240,
+          "problem_indices": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "format_source": "https://www.noi.cn/xw/2023-09-16/795625.shtml"
+    },
+    {
+      "year": 2024,
+      "province": "广东",
+      "stage": "second",
+      "track": "J",
+      "thresholds": [
+        260,
+        170,
+        80
+      ],
+      "source": "https://www.noi.cn/xw/2024-11-19/834421.shtml",
+      "reviewed": true,
+      "complete_grade_lines": true,
+      "reviewed_at": "2026-10-09",
+      "verification": "CCF/NOI对应年度第二轮评级规则：广东一等线与适用的二三等规则交叉核对",
+      "duration_minutes": 210,
+      "sessions": [
+        {
+          "day": 1,
+          "duration_minutes": 210,
+          "problem_indices": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "format_source": "https://www.noi.cn/xw/2024-09-30/830514.shtml"
+    },
+    {
+      "year": 2024,
+      "province": "广东",
+      "stage": "second",
+      "track": "S",
+      "thresholds": [
+        180,
+        105,
+        60
+      ],
+      "source": "https://www.noi.cn/xw/2024-11-19/834421.shtml",
+      "reviewed": true,
+      "complete_grade_lines": true,
+      "reviewed_at": "2026-10-09",
+      "verification": "CCF/NOI对应年度第二轮评级规则：广东一等线与适用的二三等规则交叉核对",
+      "duration_minutes": 240,
+      "sessions": [
+        {
+          "day": 1,
+          "duration_minutes": 240,
+          "problem_indices": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "format_source": "https://www.noi.cn/xw/2024-09-30/830514.shtml"
+    },
+    {
+      "year": 2025,
+      "province": "广东",
+      "stage": "second",
+      "track": "J",
+      "thresholds": [
+        270,
+        205,
+        130
+      ],
+      "source": "https://www.noi.cn/xw/2025-11-14/853110.shtml",
+      "reviewed": true,
+      "complete_grade_lines": true,
+      "reviewed_at": "2026-10-09",
+      "verification": "CCF/NOI对应年度第二轮评级规则：广东一等线与适用的二三等规则交叉核对",
+      "duration_minutes": 210,
+      "sessions": [
+        {
+          "day": 1,
+          "duration_minutes": 210,
+          "problem_indices": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "format_source": "https://www.noi.cn/gs/xw/gd/2025-10-25/850195.shtml"
+    },
+    {
+      "year": 2025,
+      "province": "广东",
+      "stage": "second",
+      "track": "S",
+      "thresholds": [
+        152,
+        60,
+        30
+      ],
+      "source": "https://www.noi.cn/xw/2025-11-14/853110.shtml",
+      "reviewed": true,
+      "complete_grade_lines": true,
+      "reviewed_at": "2026-10-09",
+      "verification": "CCF/NOI对应年度第二轮评级规则：广东一等线与适用的二三等规则交叉核对",
+      "duration_minutes": 240,
+      "sessions": [
+        {
+          "day": 1,
+          "duration_minutes": 240,
+          "problem_indices": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "format_source": "https://www.noi.cn/gs/xw/gd/2025-10-25/850195.shtml"
+    }
+  ],
+  "admissions": []
+}

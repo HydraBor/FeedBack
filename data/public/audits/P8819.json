@@ -1,0 +1,55 @@
+{
+  "id": "P8819",
+  "review": {
+    "status": "passed",
+    "kind": "ai",
+    "version": "csp-review-2026-10-09-v1",
+    "model": "deepseek-flash",
+    "at": "2026-10-09T02:54:31+08:00",
+    "fingerprint": "55794815852fdcadeb26b6cc149cc94c9ca62ee32bd46d2671a635f6a28b5509",
+    "crosscheck_source": "https://www.luogu.com.cn/problem/P8819?_contentOnly=1",
+    "crosscheck_sha256": "46bd38ed5d71f1184521f9c6fb7586bb624ee8357e4e142b935d16bb4041e437",
+    "assessment": {
+      "solution_summary": "维护每个点当前出度 d_u，用随机双模数哈希维护 S=sum d_u r_u 和目标 T=sum r_u。每个终点 v 保存指向它的原始边起点权值和 original[v] 与当前可用边起点权值和 current[v]，全局维护 S 和可用边数 edgeCount。单边删除/恢复直接更新 current[v]、S 和计数；整体摧毁/修复则把 current[v] 与 original[v] 做替换。每次操作后若 edgeCount==n 且 S==T 输出 YES，否则 NO。时间 O(n+m+q)，空间 O(n)。",
+      "correctness_argument": "连续穿梭条件直接要求每个据点恰好一条可用出边。若所有点出度=1，从任意点出发沿唯一出边必在有限点集中重复，形成有向环，故可实现反击。因此反攻等价于所有点出度=1。哈希量 S=sum d_u r_u 在出度全 1 时等于 T=sum r_u；若存在出度非 1，则 sum (d_u-1)r_u=0 是一个非零系数的线性方程，双模数下每个错误状态碰撞概率 ≤ 1/(P1P2)，q 次操作联合界 < 5e-13。edgeCount==n 进一步过滤边数不符的状态，且不排除任何合法状态。因此算法单侧正确。",
+      "complexity": "时间 O(n+m+q)，空间 O(n)。",
+      "partial_credit_note": "题面按测试点计分，每测试点 5 分，满分 100 分。测试点 1~3、4~8 为小/中数据；9~10 无 t=2/4；11~12 无 t=4；13~16 n≤1e5；17~20 全范围。该满分解法对所有测试点均适用，不依赖特殊限制，因此可获满分；无法从题面得知是否有额外阶梯计分，但该解法不因特殊限制缺失而失效。"
+    },
+    "findings": [
+      "题面与 crosscheck 洛谷公开题面一致：操作描述、输出格式、样例及数据范围均无实质差异。",
+      "核心结论‘反攻等价于每个点当前出度均为 1’推导正确：连续穿梭直接要求出度=1；若所有点出度=1，从任意点出发沿唯一出边必然进入有向环，满足无限穿梭。",
+      "随机指纹维护 S=sum d_u r_u 与目标 T=sum r_u，并辅以 edgeCount==n，能正确单侧判断所有出度=1；双模数 P1=1e9+7、P2=1e9+9 下碰撞概率上界分析合理。",
+      "代码按终点聚合 original/current 贡献，四种操作均为常数时间，且正确处理整体摧毁/修复时已部分可用边的情况，未重复计算或遗漏。",
+      "复杂度 O(n+m+q) 时间和 O(n) 空间，满足 n,m,q ≤ 5e5、2s、512MB 限制。",
+      "题面按测试点计分，每点 5 分；满分解法不依赖无 t=2/4 等特殊限制，所有测试点均可通过。"
+    ],
+    "limitations": "AI交叉审核与静态推理；未运行参考程序，不能等同完整官方评测通过。"
+  },
+  "attempts": [
+    {
+      "problem_id": "P8819",
+      "statement_matches": true,
+      "solution_correct": true,
+      "complexity_feasible": true,
+      "scoring_consistent": true,
+      "topic_ids": [
+        "K036"
+      ],
+      "findings": [
+        "题面与 crosscheck 洛谷公开题面一致：操作描述、输出格式、样例及数据范围均无实质差异。",
+        "核心结论‘反攻等价于每个点当前出度均为 1’推导正确：连续穿梭直接要求出度=1；若所有点出度=1，从任意点出发沿唯一出边必然进入有向环，满足无限穿梭。",
+        "随机指纹维护 S=sum d_u r_u 与目标 T=sum r_u，并辅以 edgeCount==n，能正确单侧判断所有出度=1；双模数 P1=1e9+7、P2=1e9+9 下碰撞概率上界分析合理。",
+        "代码按终点聚合 original/current 贡献，四种操作均为常数时间，且正确处理整体摧毁/修复时已部分可用边的情况，未重复计算或遗漏。",
+        "复杂度 O(n+m+q) 时间和 O(n) 空间，满足 n,m,q ≤ 5e5、2s、512MB 限制。",
+        "题面按测试点计分，每点 5 分；满分解法不依赖无 t=2/4 等特殊限制，所有测试点均可通过。"
+      ],
+      "solution_summary": "维护每个点当前出度 d_u，用随机双模数哈希维护 S=sum d_u r_u 和目标 T=sum r_u。每个终点 v 保存指向它的原始边起点权值和 original[v] 与当前可用边起点权值和 current[v]，全局维护 S 和可用边数 edgeCount。单边删除/恢复直接更新 current[v]、S 和计数；整体摧毁/修复则把 current[v] 与 original[v] 做替换。每次操作后若 edgeCount==n 且 S==T 输出 YES，否则 NO。时间 O(n+m+q)，空间 O(n)。",
+      "correctness_argument": "连续穿梭条件直接要求每个据点恰好一条可用出边。若所有点出度=1，从任意点出发沿唯一出边必在有限点集中重复，形成有向环，故可实现反击。因此反攻等价于所有点出度=1。哈希量 S=sum d_u r_u 在出度全 1 时等于 T=sum r_u；若存在出度非 1，则 sum (d_u-1)r_u=0 是一个非零系数的线性方程，双模数下每个错误状态碰撞概率 ≤ 1/(P1P2)，q 次操作联合界 < 5e-13。edgeCount==n 进一步过滤边数不符的状态，且不排除任何合法状态。因此算法单侧正确。",
+      "complexity": "时间 O(n+m+q)，空间 O(n)。",
+      "partial_credit_note": "题面按测试点计分，每测试点 5 分，满分 100 分。测试点 1~3、4~8 为小/中数据；9~10 无 t=2/4；11~12 无 t=4；13~16 n≤1e5；17~20 全范围。该满分解法对所有测试点均适用，不依赖特殊限制，因此可获满分；无法从题面得知是否有额外阶梯计分，但该解法不因特殊限制缺失而失效。",
+      "blocking_issues": [],
+      "corrected_editorial": "",
+      "corrected_statement": ""
+    }
+  ]
+}

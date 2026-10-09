@@ -1,0 +1,57 @@
+{
+  "id": "P8818",
+  "review": {
+    "status": "passed",
+    "kind": "ai",
+    "version": "csp-review-2026-10-09-v1",
+    "model": "deepseek-flash",
+    "at": "2026-10-09T02:53:59+08:00",
+    "fingerprint": "8f9f308ce55d524d0e658434361110e1659172eda75a9318ffb146d892c6b823",
+    "crosscheck_source": "https://www.luogu.com.cn/problem/P8818?_contentOnly=1",
+    "crosscheck_sha256": "f4f9b0a98902b15a24b093c09c3bd34789de9cad4d50823a5ff8ccf2e5322417",
+    "assessment": {
+      "solution_summary": "先做博弈化简：对固定a，Q最优得f(a)=a*b_min(a>=0)，a*b_max(a<0)。对非负a，f关于a线性，按b_min符号取区间最大非负数或最小非负数；对负a，按b_max符号取区间最大负数或区间最小负数。故小L只需在A'的{a_min,a_max,最小非负数,最大负数}至多四个候选上取f的最大值。用两棵线段树分别维护A和B的这些区间信息，O(log)回答每轮。",
+      "correctness_argument": "引理1：固定a后Q取使ab最小的b；a>=0时ab关于b单调不减，Q取b_min；a<0时单调递减，Q取b_max，故得分为f(a)。引理2：在非负候选类中f(a)=a*b_min为线性函数；b_min>=0时取最大的非负数(即a_max)，b_min<0时取最小的非负数，二者均在候选集中。引理3：在负候选类中f(a)=a*b_max为线性函数；b_max>=0时取最大的负数，b_max<0时取最小的负数(即a_min)，二者均在候选集中。故对所有有效候选取max即等于max_{a在A'}min_{b在B'}ab，满足题面双方最优策略下的得分。",
+      "complexity": "时间O((n+m)+q(log n+log m))，空间O(n+m)。",
+      "partial_credit_note": "题面明确按20个测试点、每点5分计分，并给出特殊性质1(Ai,Bi>0)与特殊性质2(每轮l1=r1或l2=r2)的测试点覆盖。可据此说明:暴力或仅支持正数/单点区间的做法可覆盖部分测试点；但题面未给出累计覆盖或互斥分组的更细分值说明，无法保证某具体非满分解法确切得分。"
+    },
+    "findings": [
+      "对照crosscheck题面：数组长度、C_ij=A_i*B_j定义、区间参数l1,r1,l2,r2约束、双方先后手与目标、样例矩阵与样例解释、两个样例的输入输出均一致；仅有文件名/附件/标点排版差异。",
+      "核心博弈化简正确：固定小L选择a后，Q的最优回应为a>=0时取b_min、a<0时取b_max，故f(a)=a*b_min(a>=0)或a*b_max(a<0)，与题面L先选、Q后选的最优策略一致。",
+      "候选集充分性成立：非负组f(a)=a*b_min按b_min符号取最大的非负数(即a_max)或最小的非负数；负数组f(a)=a*b_max按b_max符号取最大的负数或最小的负数(即a_min)。因此{a_min,a_max,最小非负数,最大负数}覆盖全部四类符号情形。",
+      "代码核对：线段树合并mn/mx/minNonNeg/maxNegative正确，哨兵INF=2e9严格大于|Ai|,|Bi|上限1e9；查询边界与递归条件正确；候选存在性用!=INF/-INF判断，不会用哨兵参与乘法。",
+      "整数范围核对：乘积绝对值不超过1e18，使用1LL*value*y.mn在64位内计算；answer初值LLONG_MIN可容纳负答案。",
+      "复杂度核对：建树O(n+m)，每次询问两次区间查询O(log n+log m)，枚举常数个候选O(1)，总时间与空间满足n,m,q<=1e5、1s/512MB。",
+      "计分核对：题面给出1~20共20个测试点及每点5分共100分，与scoring_note一致，特殊性质1/2描述与题面一致。"
+    ],
+    "limitations": "AI交叉审核与静态推理；未运行参考程序，不能等同完整官方评测通过。"
+  },
+  "attempts": [
+    {
+      "problem_id": "P8818",
+      "statement_matches": true,
+      "solution_correct": true,
+      "complexity_feasible": true,
+      "scoring_consistent": true,
+      "topic_ids": [
+        "K029"
+      ],
+      "findings": [
+        "对照crosscheck题面：数组长度、C_ij=A_i*B_j定义、区间参数l1,r1,l2,r2约束、双方先后手与目标、样例矩阵与样例解释、两个样例的输入输出均一致；仅有文件名/附件/标点排版差异。",
+        "核心博弈化简正确：固定小L选择a后，Q的最优回应为a>=0时取b_min、a<0时取b_max，故f(a)=a*b_min(a>=0)或a*b_max(a<0)，与题面L先选、Q后选的最优策略一致。",
+        "候选集充分性成立：非负组f(a)=a*b_min按b_min符号取最大的非负数(即a_max)或最小的非负数；负数组f(a)=a*b_max按b_max符号取最大的负数或最小的负数(即a_min)。因此{a_min,a_max,最小非负数,最大负数}覆盖全部四类符号情形。",
+        "代码核对：线段树合并mn/mx/minNonNeg/maxNegative正确，哨兵INF=2e9严格大于|Ai|,|Bi|上限1e9；查询边界与递归条件正确；候选存在性用!=INF/-INF判断，不会用哨兵参与乘法。",
+        "整数范围核对：乘积绝对值不超过1e18，使用1LL*value*y.mn在64位内计算；answer初值LLONG_MIN可容纳负答案。",
+        "复杂度核对：建树O(n+m)，每次询问两次区间查询O(log n+log m)，枚举常数个候选O(1)，总时间与空间满足n,m,q<=1e5、1s/512MB。",
+        "计分核对：题面给出1~20共20个测试点及每点5分共100分，与scoring_note一致，特殊性质1/2描述与题面一致。"
+      ],
+      "solution_summary": "先做博弈化简：对固定a，Q最优得f(a)=a*b_min(a>=0)，a*b_max(a<0)。对非负a，f关于a线性，按b_min符号取区间最大非负数或最小非负数；对负a，按b_max符号取区间最大负数或区间最小负数。故小L只需在A'的{a_min,a_max,最小非负数,最大负数}至多四个候选上取f的最大值。用两棵线段树分别维护A和B的这些区间信息，O(log)回答每轮。",
+      "correctness_argument": "引理1：固定a后Q取使ab最小的b；a>=0时ab关于b单调不减，Q取b_min；a<0时单调递减，Q取b_max，故得分为f(a)。引理2：在非负候选类中f(a)=a*b_min为线性函数；b_min>=0时取最大的非负数(即a_max)，b_min<0时取最小的非负数，二者均在候选集中。引理3：在负候选类中f(a)=a*b_max为线性函数；b_max>=0时取最大的负数，b_max<0时取最小的负数(即a_min)，二者均在候选集中。故对所有有效候选取max即等于max_{a在A'}min_{b在B'}ab，满足题面双方最优策略下的得分。",
+      "complexity": "时间O((n+m)+q(log n+log m))，空间O(n+m)。",
+      "partial_credit_note": "题面明确按20个测试点、每点5分计分，并给出特殊性质1(Ai,Bi>0)与特殊性质2(每轮l1=r1或l2=r2)的测试点覆盖。可据此说明:暴力或仅支持正数/单点区间的做法可覆盖部分测试点；但题面未给出累计覆盖或互斥分组的更细分值说明，无法保证某具体非满分解法确切得分。",
+      "blocking_issues": [],
+      "corrected_editorial": "",
+      "corrected_statement": ""
+    }
+  ]
+}

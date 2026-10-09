@@ -1,0 +1,512 @@
+{
+  "version": "starter-2026-10-08",
+  "full_luogu_sync": false,
+  "items": [
+    {
+      "id": "K001",
+      "name": "模拟",
+      "display": "模拟",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "模拟"
+      ]
+    },
+    {
+      "id": "K002",
+      "name": "枚举",
+      "display": "枚举",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "枚举"
+      ]
+    },
+    {
+      "id": "K003",
+      "name": "排序",
+      "display": "排序",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "排序"
+      ]
+    },
+    {
+      "id": "K004",
+      "name": "二分",
+      "display": "二分",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "二分"
+      ]
+    },
+    {
+      "id": "K005",
+      "name": "前缀和",
+      "display": "前缀和",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "前缀和"
+      ]
+    },
+    {
+      "id": "K006",
+      "name": "差分",
+      "display": "差分",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "差分"
+      ]
+    },
+    {
+      "id": "K007",
+      "name": "递归",
+      "display": "递归",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "递归"
+      ]
+    },
+    {
+      "id": "K008",
+      "name": "深度优先搜索 DFS",
+      "display": "深度优先搜索",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "深度优先搜索"
+      ]
+    },
+    {
+      "id": "K009",
+      "name": "广度优先搜索 BFS",
+      "display": "广度优先搜索",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "广度优先搜索"
+      ]
+    },
+    {
+      "id": "K010",
+      "name": "贪心",
+      "display": "贪心",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "贪心"
+      ]
+    },
+    {
+      "id": "K011",
+      "name": "动态规划 DP",
+      "display": "动态规划",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "动态规划"
+      ]
+    },
+    {
+      "id": "K012",
+      "name": "线性 DP",
+      "display": "线性",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "线性"
+      ]
+    },
+    {
+      "id": "K013",
+      "name": "背包",
+      "display": "背包",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "背包"
+      ]
+    },
+    {
+      "id": "K014",
+      "name": "区间 DP",
+      "display": "区间",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "区间"
+      ]
+    },
+    {
+      "id": "K015",
+      "name": "树形 DP",
+      "display": "树形",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "树形"
+      ]
+    },
+    {
+      "id": "K016",
+      "name": "状压 DP",
+      "display": "状压",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "状压"
+      ]
+    },
+    {
+      "id": "K017",
+      "name": "图论",
+      "display": "图论",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "图论"
+      ]
+    },
+    {
+      "id": "K018",
+      "name": "最短路",
+      "display": "最短路",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "最短路"
+      ]
+    },
+    {
+      "id": "K019",
+      "name": "拓扑排序",
+      "display": "拓扑排序",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "拓扑排序"
+      ]
+    },
+    {
+      "id": "K020",
+      "name": "最小生成树",
+      "display": "最小生成树",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "最小生成树"
+      ]
+    },
+    {
+      "id": "K021",
+      "name": "树",
+      "display": "树",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "树"
+      ]
+    },
+    {
+      "id": "K022",
+      "name": "最近公共祖先 LCA",
+      "display": "最近公共祖先 LCA",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "最近公共祖先"
+      ]
+    },
+    {
+      "id": "K023",
+      "name": "并查集",
+      "display": "并查集",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "并查集"
+      ]
+    },
+    {
+      "id": "K024",
+      "name": "栈",
+      "display": "栈",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "栈"
+      ]
+    },
+    {
+      "id": "K025",
+      "name": "队列",
+      "display": "队列",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "队列"
+      ]
+    },
+    {
+      "id": "K026",
+      "name": "堆",
+      "display": "堆",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "堆"
+      ]
+    },
+    {
+      "id": "K027",
+      "name": "优先队列",
+      "display": "优先队列",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "优先队列"
+      ]
+    },
+    {
+      "id": "K028",
+      "name": "树状数组",
+      "display": "树状数组",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": 53,
+      "status": "curated_starter",
+      "aliases": [
+        "树状数组"
+      ]
+    },
+    {
+      "id": "K029",
+      "name": "线段树",
+      "display": "线段树",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "线段树"
+      ]
+    },
+    {
+      "id": "K030",
+      "name": "离散化",
+      "display": "离散化",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "离散化"
+      ]
+    },
+    {
+      "id": "K031",
+      "name": "数学",
+      "display": "数学",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "数学"
+      ]
+    },
+    {
+      "id": "K032",
+      "name": "数论",
+      "display": "数论",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "数论"
+      ]
+    },
+    {
+      "id": "K033",
+      "name": "排列组合",
+      "display": "排列组合",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "排列组合"
+      ]
+    },
+    {
+      "id": "K034",
+      "name": "位运算",
+      "display": "位运算",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "位运算"
+      ]
+    },
+    {
+      "id": "K035",
+      "name": "字符串",
+      "display": "字符串",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "字符串"
+      ]
+    },
+    {
+      "id": "K036",
+      "name": "哈希",
+      "display": "哈希",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "哈希"
+      ]
+    },
+    {
+      "id": "K037",
+      "name": "字典树 Trie",
+      "display": "字典树 Trie",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "字典树"
+      ]
+    },
+    {
+      "id": "K038",
+      "name": "字符串匹配 KMP",
+      "display": "字符串匹配 KMP",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "字符串匹配"
+      ]
+    },
+    {
+      "id": "K039",
+      "name": "分治",
+      "display": "分治",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": 112,
+      "status": "curated_starter",
+      "aliases": [
+        "分治"
+      ]
+    },
+    {
+      "id": "K040",
+      "name": "倍增",
+      "display": "倍增",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "倍增"
+      ]
+    },
+    {
+      "id": "K041",
+      "name": "双指针",
+      "display": "双指针",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "双指针"
+      ]
+    },
+    {
+      "id": "K042",
+      "name": "单调栈",
+      "display": "单调栈",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "单调栈"
+      ]
+    },
+    {
+      "id": "K043",
+      "name": "单调队列",
+      "display": "单调队列",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "单调队列"
+      ]
+    },
+    {
+      "id": "K044",
+      "name": "构造",
+      "display": "构造",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "构造"
+      ]
+    },
+    {
+      "id": "K045",
+      "name": "计数",
+      "display": "计数",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "计数"
+      ]
+    },
+    {
+      "id": "K046",
+      "name": "计算几何",
+      "display": "计算几何",
+      "source": "https://help.luogu.com.cn/manual/luogu/problem/search",
+      "platform_id": null,
+      "status": "curated_starter",
+      "aliases": [
+        "计算几何"
+      ]
+    }
+  ]
+}

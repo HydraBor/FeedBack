@@ -1,0 +1,57 @@
+{
+  "id": "P9749",
+  "review": {
+    "status": "passed",
+    "kind": "ai",
+    "version": "csp-review-2026-10-09-v1",
+    "model": "deepseek-flash",
+    "at": "2026-10-09T02:54:44+08:00",
+    "fingerprint": "b21aa31e1164607f1cd4fb835b4a2e36bb206b3ef614c77f68a3246a4362fb5d",
+    "crosscheck_source": "https://www.luogu.com.cn/problem/P9749?_contentOnly=1",
+    "crosscheck_sha256": "fa7191d2c138f75db3f844a4e6d5b6b0d09f2c3f623d28f8995c3a50368ef127",
+    "assessment": {
+      "solution_summary": "维护当前已过站点最低油价 minPrice 和累计距离 distance。令 need=ceil(distance/d) 为到达下一站所需累计总油量，bought 为已购买油量。每处理一段路，新增 need-bought 升油按 minPrice 购买并累加费用，随后令 bought=need。最终答案为最小花费。",
+      "correctness_argument": "设 Q_i=ceil((v_1+...+v_i)/d) 为到达站点 i+1 的累计必需油量，M_i=min(a_1..a_i)。任何方案中，第 Q_{i-1}+1 到 Q_i 升油必须在前 i 个站点购买，单价至少 M_i，因此总费用下界为 sum (Q_i-Q_{i-1})M_i。由于油箱容量无限，可在各区间对应最低价站点提前购买这些油；离开站点 i 时已备齐前 i 组油，累计油量 Q_i 足以行驶到 i+1，故该下界可达，贪心方案最优。",
+      "complexity": "时间 O(n)；保存 v 和 a 数组占用 O(n) 空间，贪心过程额外 O(1)。",
+      "partial_credit_note": "题面明确每测试点 5 分，共 20 个测试点：1~5 组 n<=8，6~10 组 n<=1000，11~13 组满足性质 A（站点1油价最低），14~16 组满足性质 B（每段距离为 d 的倍数），17~20 组无特殊性质。该 O(n) 贪心解法不依赖特殊性质，覆盖全部测试点，可得 100 分；不存在仅适用于部分测试点的分组分值需单独讨论。"
+    },
+    "findings": [
+      "题面与 crosscheck 的输入输出、样例、数据范围、特殊性质描述一致，仅有标题层级和文字排版差异。",
+      "贪心公式 Q_i=ceil((v_1+...+v_i)/d)，M_i=min(a_1..a_i)，答案 sum (Q_i-Q_{i-1})M_i 与标准解法一致。",
+      "代码先更新 minPrice 包含当前站点 a[i]，再累加 v[i] 并计算 need，符合第 i 段路可在站点 1..i 买油的约束。",
+      "整数范围使用 long long：累计距离最大约 1e10，总费用最大约 1e15，不会溢出。",
+      "边界 n=1 时循环不执行，输出 0，符合无需行驶、无需加油的情况。",
+      "时间复杂度 O(n)，空间 O(n) 保存输入，在 n<=1e5、512MB 限制下可行。",
+      "题面明确每测试点 5 分，共 20 个测试点，满分解覆盖全部测试点，计分一致。"
+    ],
+    "limitations": "AI交叉审核与静态推理；未运行参考程序，不能等同完整官方评测通过。"
+  },
+  "attempts": [
+    {
+      "problem_id": "P9749",
+      "statement_matches": true,
+      "solution_correct": true,
+      "complexity_feasible": true,
+      "scoring_consistent": true,
+      "topic_ids": [
+        "K010"
+      ],
+      "findings": [
+        "题面与 crosscheck 的输入输出、样例、数据范围、特殊性质描述一致，仅有标题层级和文字排版差异。",
+        "贪心公式 Q_i=ceil((v_1+...+v_i)/d)，M_i=min(a_1..a_i)，答案 sum (Q_i-Q_{i-1})M_i 与标准解法一致。",
+        "代码先更新 minPrice 包含当前站点 a[i]，再累加 v[i] 并计算 need，符合第 i 段路可在站点 1..i 买油的约束。",
+        "整数范围使用 long long：累计距离最大约 1e10，总费用最大约 1e15，不会溢出。",
+        "边界 n=1 时循环不执行，输出 0，符合无需行驶、无需加油的情况。",
+        "时间复杂度 O(n)，空间 O(n) 保存输入，在 n<=1e5、512MB 限制下可行。",
+        "题面明确每测试点 5 分，共 20 个测试点，满分解覆盖全部测试点，计分一致。"
+      ],
+      "solution_summary": "维护当前已过站点最低油价 minPrice 和累计距离 distance。令 need=ceil(distance/d) 为到达下一站所需累计总油量，bought 为已购买油量。每处理一段路，新增 need-bought 升油按 minPrice 购买并累加费用，随后令 bought=need。最终答案为最小花费。",
+      "correctness_argument": "设 Q_i=ceil((v_1+...+v_i)/d) 为到达站点 i+1 的累计必需油量，M_i=min(a_1..a_i)。任何方案中，第 Q_{i-1}+1 到 Q_i 升油必须在前 i 个站点购买，单价至少 M_i，因此总费用下界为 sum (Q_i-Q_{i-1})M_i。由于油箱容量无限，可在各区间对应最低价站点提前购买这些油；离开站点 i 时已备齐前 i 组油，累计油量 Q_i 足以行驶到 i+1，故该下界可达，贪心方案最优。",
+      "complexity": "时间 O(n)；保存 v 和 a 数组占用 O(n) 空间，贪心过程额外 O(1)。",
+      "partial_credit_note": "题面明确每测试点 5 分，共 20 个测试点：1~5 组 n<=8，6~10 组 n<=1000，11~13 组满足性质 A（站点1油价最低），14~16 组满足性质 B（每段距离为 d 的倍数），17~20 组无特殊性质。该 O(n) 贪心解法不依赖特殊性质，覆盖全部测试点，可得 100 分；不存在仅适用于部分测试点的分组分值需单独讨论。",
+      "blocking_issues": [],
+      "corrected_editorial": "",
+      "corrected_statement": ""
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>{{ name }} · 学习反馈</title>
+<style>
+@page { size:A4; margin:14mm 15mm 24mm; }
+* { box-sizing:border-box; } body { margin:0; color:#263b4c; font:10pt/1.7 "Noto Sans CJK SC","Microsoft YaHei",sans-serif; background:white; }
+header { border-bottom:2px solid #238b80; padding-bottom:12px; margin-bottom:16px; }
+.kicker { color:#238b80; font-size:8pt; letter-spacing:2px; } h1 { font-size:24pt; line-height:1.25; font-weight:700; margin:5px 0 10px; }
+.meta { color:#607581; font-size:9pt; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+.badge { color:#98551b; background:#fff0dc; padding:2px 8px; font-size:9pt; margin-bottom:6px; }
+h2 { font-size:11pt; line-height:1.5; margin:0 0 8px; color:#238b80; }
+p { margin:0 0 8px; } .summary { margin-bottom:12px; } .summary p { font-size:10.5pt; }
+.positions { border:1px solid #d5e4e3; border-left:3px solid #238b80; border-radius:5px; background:#f5faf9; padding:10px 13px; margin-bottom:12px; break-inside:avoid; }
+.position-intro { color:#607581; font-size:9pt; line-height:1.4; margin-bottom:4px; } .position + .position { margin-top:4px; } .position strong { display:block; font-size:10.5pt; line-height:1.45; } .basis { color:#607581; font-size:8pt; line-height:1.55; margin-top:5px; }
+.middle { display:flex; gap:20px; margin-bottom:14px; break-inside:avoid; } .chart { width:45%; flex:none; container-type:inline-size; } .chart svg { display:block; width:100%; height:210px; }
+.level-legend { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:3px 8px; margin:5px 0 0; color:#748790; font-size:clamp(5.5pt,3.25cqw,7.5pt); line-height:1.6; } .legend-title { font-weight:600; color:#607581; } .level { display:grid; grid-template-columns:3.5em minmax(0,1fr); column-gap:2px; align-items:baseline; white-space:nowrap; } .level b { font-weight:600; font-variant-numeric:tabular-nums; } .growth { flex:1; } .growth p { margin-bottom:10px; padding-left:23px; position:relative; break-inside:avoid; font-size:9.5pt; line-height:1.65; } .growth b { position:absolute; left:0; top:0; color:#238b80; font-size:9pt; }
+.middle.long { display:block; break-inside:auto; } .middle.long .chart { width:45%; break-inside:avoid; margin-bottom:16px; } .middle.long .growth { width:100%; }
+.next { margin-bottom:14px; } .step { padding-left:25px; position:relative; margin-bottom:9px; break-inside:avoid; } .number { position:absolute; left:0; top:2px; width:18px; height:18px; text-align:center; font:9pt/18px sans-serif; background:#e6f1ef; color:#238b80; border-radius:50%; }
+a { color:#607581; text-decoration:none; }
+.footer { border-top:1px solid #e0e9e9; margin-top:15px; padding-top:8px; font-size:7.5pt; color:#748790; break-inside:avoid; }
+.chart-empty { height:170px; padding-top:60px; color:#748790; font-size:9pt; } h2 { break-after:avoid; } p { orphans:3; widows:3; overflow-wrap:anywhere; }
+@media print { .footer { display:none; } }
+.practice-heading { margin:10px 0 6px; } .practice-list { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:4px 8px; } .practice-link { display:block; color:#263b4c; font-size:9.5pt; line-height:1.6; overflow-wrap:anywhere; break-inside:avoid; } .practice-link:hover { text-decoration:underline; } .practice-link span { color:#238b80; white-space:nowrap; margin-left:4px; }
+.with-practice header { padding-bottom:10px; margin-bottom:12px; } .with-practice h1 { margin-bottom:8px; } .with-practice .summary { margin-bottom:10px; } .with-practice .positions { padding:7px 12px; margin-bottom:10px; } .with-practice .middle { margin-bottom:8px; } .with-practice .chart svg { height:198px; } .with-practice .growth p { margin-bottom:7px; line-height:1.6; } .with-practice .step { margin-bottom:6px; }
+@media screen { body { min-height:297mm; display:flex; flex-direction:column; max-width:210mm; padding:14mm 15mm; margin:0 auto; box-shadow:0 5px 35px #18383915; } .footer { margin-top:auto; } }
+</style></head><body{% if report.practice_recommendations %} class="with-practice"{% endif %}>
+<header><div class="kicker">LEARNING PROGRESS · 阶段学习反馈</div><h1>{{ report.title }}</h1>
+{% if demo %}<div class="badge">演示报告 · 评分与成果文字为示例，不代表真实学生评估</div>{% endif %}
+<div class="meta"><span>学习时间：{{ period.start_date }} — {{ period.end_date }}</span><span>目标：{{ period.target_year }} 年 {% for track in period.tracks %}CSP-{{ track }}{% if not loop.last %} / {% endif %}{% endfor %}</span></div></header>
+<section class="summary"><h2>本期成果</h2><p>{{ report.summary }}</p></section>
+<section class="positions"><div class="position-intro">学生目前实力相当于：</div>{% for position in report.positions %}<div class="position"><strong>{{ position.label }}</strong></div>{% endfor %}<div class="basis">{{ position_note }}</div></section>
+<div class="middle{% if long_copy %} long{% endif %}"><section class="chart"><h2>本期知识掌握</h2>{{ chart|safe }}<div class="level-legend" role="note" aria-label="知识评分说明"><span class="legend-title">分数怎么看：</span>{% for level in score_levels %}<span class="level"><b>{{ level.range }}</b><span>{{ level.label }}</span></span>{% endfor %}</div></section>
+<section class="growth"><h2>能力表现</h2>{% for item in report.highlights %}<p><b>0{{ loop.index }}</b>{{ item }}</p>{% endfor %}</section></div>
+<section class="next"><h2>下一阶段重点</h2>{% for item in report.next_steps %}<div class="step"><span class="number">{{ loop.index }}</span>{{ item }}</div>{% endfor %}{% if report.practice_recommendations %}<h2 class="practice-heading">配套练习题单</h2><div class="practice-list">{% for item in report.practice_recommendations %}<a class="practice-link" href="{{ item.url }}">{{ item.title }}<span>↗</span></a>{% endfor %}</div>{% endif %}</section>
+<footer class="footer">本报告依据指定学习时段的材料形成，等级定位为训练对照估计，不等同于认证结果。{% if report.teacher %}审核讲师：{{ report.teacher }}。{% endif %}</footer>
+</body></html>

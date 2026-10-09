@@ -1,0 +1,15 @@
+{
+  "name": "feedback-acgo-importer",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Selected-student ACGO material import through the lecturer's dedicated browser",
+  "engines": {"node": ">=20"},
+  "scripts": {"test": "node --test test/*.test.mjs"},
+  "dependencies": {
+    "playwright-core": "1.61.1",
+    "json-bigint": "1.0.0",
+    "turndown": "7.2.4",
+    "turndown-plugin-gfm": "1.0.2"
+  }
+}

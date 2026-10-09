@@ -1,0 +1,6 @@
+{
+  "repository": "https://github.com/HydraBor/ACGO-crawler",
+  "commit": "390b61d95b5aaeb245d8d2f4f993d5ce385654f9",
+  "license": "MIT",
+  "notes": "Unmodified helpers. Collector endpoints adapted from src/index.mjs; only one selected student is imported."
+}

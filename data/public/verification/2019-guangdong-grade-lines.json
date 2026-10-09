@@ -1,0 +1,102 @@
+{
+  "year": 2019,
+  "province": "广东",
+  "stage": "second",
+  "verified_at": "2026-10-09",
+  "rule_source": "https://www.noi.cn/xw/2019-12-09/715511.shtml",
+  "final_awards_source": "https://www.noi.cn/hjmd/mdgs/2019/2019-12-11/710402.shtml",
+  "thresholds": {
+    "J": [
+      250,
+      100,
+      70
+    ],
+    "S": [
+      255,
+      110,
+      80
+    ]
+  },
+  "verification_method": "CCF规则明示广东一等线J250、S255。广东一等线高于全国一等基准，二、三等只能按全国基准或上调。逐项解析正式名单，广东二、三等存在恰好达到J100/70、S110/80的获评成绩，排除省内上调；一等最低获评成绩亦与明示省线一致。",
+  "award_lists": [
+    {
+      "track": "S",
+      "grade": 1,
+      "url": "https://www.noi.cn/ccf/file/do?fid=tTEH4Etf&attach=n",
+      "content_sha256": "68eb4b931fa096d4fa4ae7541c2b5664cdc0bfbcc40b9eebd99316c08d731af6",
+      "national_count": 2865,
+      "guangdong_count": 230,
+      "guangdong_min": 255.0,
+      "guangdong_max": 564.0,
+      "scores_at_minimum": 3,
+      "content_type": "text/html;charset=UTF-8",
+      "bytes": 2559629
+    },
+    {
+      "track": "S",
+      "grade": 2,
+      "url": "https://www.noi.cn/ccf/file/do?fid=FYq6T8g5&attach=n",
+      "content_sha256": "54440418ed732d10687b4ac2da9cf5c8aeff706765031fe184b694feb41bb3c4",
+      "national_count": 4351,
+      "guangdong_count": 419,
+      "guangdong_min": 110.0,
+      "guangdong_max": 254.0,
+      "scores_at_minimum": 4,
+      "content_type": "text/html;charset=UTF-8",
+      "bytes": 3884237
+    },
+    {
+      "track": "S",
+      "grade": 3,
+      "url": "https://www.noi.cn/ccf/file/do?fid=HjTeYfLd&attach=n",
+      "content_sha256": "f8e5f59391ef87f81d0c5a340781dc2cbc11976d29c450c110fb18e94a525a8d",
+      "national_count": 1563,
+      "guangdong_count": 83,
+      "guangdong_min": 80.0,
+      "guangdong_max": 109.0,
+      "scores_at_minimum": 2,
+      "content_type": "text/html;charset=UTF-8",
+      "bytes": 1443074
+    },
+    {
+      "track": "J",
+      "grade": 1,
+      "url": "https://www.noi.cn/ccf/file/do?fid=3DaqgQGR&attach=n",
+      "content_sha256": "d7ba153e55ffeecad81d2c37bcb3166e299ff997b80c9529a02faae307d7b0f7",
+      "national_count": 3226,
+      "guangdong_count": 243,
+      "guangdong_min": 250.0,
+      "guangdong_max": 400.0,
+      "scores_at_minimum": 36,
+      "content_type": "text/html;charset=UTF-8",
+      "bytes": 2978514
+    },
+    {
+      "track": "J",
+      "grade": 2,
+      "url": "https://www.noi.cn/ccf/file/do?fid=d5R35mMG&attach=n",
+      "content_sha256": "281fabb06c4def4b6a03fdf86d9652198caf20fbb126113760a5e6b296b981bb",
+      "national_count": 8503,
+      "guangdong_count": 551,
+      "guangdong_min": 100.0,
+      "guangdong_max": 245.0,
+      "scores_at_minimum": 32,
+      "content_type": "text/html;charset=UTF-8",
+      "bytes": 7780411
+    },
+    {
+      "track": "J",
+      "grade": 3,
+      "url": "https://www.noi.cn/ccf/file/do?fid=GafMyBr2&attach=n",
+      "content_sha256": "d24c0dc96402af59af4757135a5fa6adb13a18762ad7e8fb8a94d2748f9852ad",
+      "national_count": 48,
+      "guangdong_count": 2,
+      "guangdong_min": 70.0,
+      "guangdong_max": 70.0,
+      "scores_at_minimum": 2,
+      "content_type": "text/html;charset=UTF-8",
+      "bytes": 61465
+    }
+  ],
+  "privacy": "仅保存公开名单的分数统计及原文件哈希，不保存考生姓名、准考证号和学校。"
+}
