@@ -14,33 +14,51 @@ sudo apt-get install -y python3-venv libnspr4 libnss3 libasound2t64 fonts-noto-c
 bash scripts/setup.sh
 ```
 
-上述系统包对应当前 Ubuntu；其他版本按系统包名及 Playwright 诊断补装。`setup.sh` 创建 `.venv`，按 Python / npm 锁文件安装、构建前端并安装 Chromium。`.tools/node` 的自动安装仅适用于 Linux x64，并校验官方包哈希；已有 Node 但版本过旧时应先升级。依赖成功后运行 `bash scripts/start.sh`。
+上述系统包对应当前 Ubuntu；其他版本按系统包名及 Playwright 诊断补装。`setup.sh` 创建 `.venv`，按 Python / npm 锁文件安装、构建前端并安装 Chromium。`.tools/node` 的自动安装仅适用于 Linux x64，并校验官方包哈希；已有 Node 但版本过旧时应先升级。依赖成功后按下节启动后台服务。
 
 ACGO 连接 Windows Edge 的新电脑还应在 Windows 安装 Node.js 20+ 到标准路径 `C:\Program Files\nodejs\node.exe`，让采集进程直接访问 Windows 的 `127.0.0.1:9223`；Linux 安装脚本不安装 Windows Node。回退 Linux Node 时需要 WSL 能访问同一调试端口，不要为此把浏览器调试端口暴露到局域网。
 
 后端默认 `127.0.0.1:8765`，不需要另开 Vite。前端在 `frontend/dist/`；源代码修改后需重新构建。启动后 [健康接口](http://localhost:8765/api/health) 应返回 `status: ok`，密钥状态为 `api_configured`，参考卷数量为 `reference_papers`。
 
-## 启动与迁移目录
+## 启动、关闭与迁移目录
 
 当前 Windows 入口：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\start.ps1
+powershell -ExecutionPolicy Bypass -File .\feedback.ps1 start
+powershell -ExecutionPolicy Bypass -File .\feedback.ps1 stop
+powershell -ExecutionPolicy Bypass -File .\feedback.ps1 status
 ```
 
-`start.ps1` 从 `\\wsl.localhost\发行版\...` 或 `\\wsl$\发行版\...` 路径识别发行版和项目目录；在 Windows 磁盘目录下通过 `wslpath` 转换，发行版默认 Ubuntu。需要指定发行版时，在启动前设置 PowerShell 的 `$env:FEEDBACK_WSL_DISTRO`。也可以直接使用实际路径：
+统一入口 `feedback.ps1` 用 `start`、`stop`、`status` 控制服务；不传参数时显示状态。`start` 创建独立的隐藏 WSL 宿主和后台服务，启动完成后命令返回，关闭终端后仍运行，直到执行 `stop`。电脑重启、终止整个 WSL 发行版或 `wsl --shutdown` 也会结束服务；本脚本不设置开机自启。
 
-```powershell
-wsl.exe -d Ubuntu --cd /home/algor/feedback -- bash scripts/start.sh
-```
+脚本从 `\\wsl.localhost\发行版\...` 或 `\\wsl$\发行版\...` 路径识别发行版和项目目录；在 Windows 磁盘目录下通过 `wslpath` 转换，发行版默认 Ubuntu。需要指定发行版时，在执行前设置 PowerShell 的 `$env:FEEDBACK_WSL_DISTRO`。目录可含空格。Windows 下推荐此入口，独立 WSL 宿主会保留 ACGO 调用 Windows Node 与 Edge 所需的互操作环境。
 
-服务结束使用 `Ctrl+C`。更换端口需在启动 shell 设置，`start.sh` 不从 `.env` 读取端口：
+Linux / WSL 终端也可使用服务控制程序：
 
 ```bash
-FEEDBACK_PORT=8766 bash scripts/start.sh
+.venv/bin/python scripts/service.py start
+.venv/bin/python scripts/service.py stop
+.venv/bin/python scripts/service.py status
 ```
 
-此时访问 `http://localhost:8766/`。前端开发代理和检查脚本默认使用 8765，改端口时同步核对。不要启动两份服务共用同一数据目录，也不要使用多 worker 模式：当前分析任务、采集进度和并发锁位于单进程内存。
+重复 `start` 不会多开服务，重复 `stop` 可以安全执行。旧版前台服务首次切换时先 `stop` 再 `start`；脚本不会把旧前台进程冒充后台服务。关闭时核对当前目录及服务命令，通过进程句柄请求正常退出；其他项目不会被关闭，也不按端口强杀。默认最多等待 30 秒，超时会提示仍在收尾，可增加等待时间。已保存材料与分析阶段保留，重启后可恢复中断分析；专用 Edge 登录窗口可继续保留。
+
+端口只在新启动时生效；更换端口先关闭原服务。示例：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\feedback.ps1 start -Port 8766
+powershell -ExecutionPolicy Bypass -File .\feedback.ps1 stop -Timeout 60
+```
+
+```bash
+.venv/bin/python scripts/service.py start --port 8766
+.venv/bin/python scripts/service.py stop --timeout 60
+```
+
+此时访问 `http://localhost:8766/`。前端开发代理和检查脚本默认使用 8765，改端口时同步核对。服务标准输出和错误写入 `.run/service.log`，重新启动时上一份日志保留为 `.run/service.previous.log`；状态与锁文件也在 `.run/`，不进入 Git 或档案备份。不要在服务运行时删除该目录。启动失败先查日志；端口已被其他程序占用时会报错，不关闭那个程序。
+
+同一项目目录只运行一份服务。不同项目副本也不要共用私有数据目录，或使用多 worker 模式：当前分析任务、采集进度和并发锁位于单进程内存。
 
 ## 密钥与配置
 
@@ -55,7 +73,7 @@ FEEDBACK_PORT=8766 bash scripts/start.sh
 | `DEEPSEEK_TIMEOUT` | 120 秒 | 单次 HTTP 请求超时；改环境后重启 |
 | `DEEPSEEK_MAX_CALLS` | 48 | 基础调用预算；报告按题量、恢复阶段自动扩展，不是固定题数上限 |
 | `FEEDBACK_DATA_DIR` | `data/private/` | 私有档案及设置目录；修改后重启 |
-| `FEEDBACK_PORT` | 8765 | 只通过启动 shell 设置 |
+| `FEEDBACK_PORT` | 8765 | Linux 控制程序的 shell 环境默认值；显式 `--port` 优先，PowerShell 使用 `-Port`；不从 `.env` 读取 |
 | `FEEDBACK_WSL_DISTRO` | WSL UNC 路径中的发行版，否则 Ubuntu | Windows PowerShell 启动环境；不从 `.env` 读取 |
 
 页面保存的设置在私有目录的 `settings.json`，页面不回显 API 密钥。只改模型或并发数不会把根目录密钥复制进去；主动填写密钥才会保存。已有设置密钥继续优先，想一直用根目录文件时，不要再在页面填写另一份。
@@ -102,8 +120,9 @@ FEEDBACK_DATA_DIR=/home/algor/feedback-restored
 
 | 现象 | 检查与处理 |
 | --- | --- |
-| 启动找不到 `.venv` 或前端未构建 | 在 Linux 根目录执行 `bash scripts/setup.sh`；确认 `start.ps1` 路径 |
-| 8765 已占用 | 查看原启动终端，先核对服务再关闭；不要同时运行多个实例 |
+| 启动找不到 `.venv` 或前端未构建 | 在 Linux 根目录执行 `bash scripts/setup.sh`；确认 `feedback.ps1` 路径 |
+| 提示旧前台服务仍在运行 | 在当前项目目录先执行 `feedback.ps1 stop`，再 `feedback.ps1 start` |
+| 8765 已占用 | 查看 `.run/service.log` 与 `feedback.ps1 status`，核对服务或改端口；不要同时运行多个实例 |
 | 读取作品按钮灰色 | 新建反馈页需选学生、填写起止日期、平台学生 / 团队 / 比赛编号；按按钮下方缺项提示补齐 |
 | ACGO 找不到浏览器 | 手动执行专用 Edge 脚本；核对 9223、Node 环境及 WSL 到 Windows 的连接 |
 | ACGO 权限 / 登录错误 | 在专用窗口重新登录，确认能查看所选学生代码；不要用其他浏览器登录代替 |

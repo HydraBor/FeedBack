@@ -20,6 +20,7 @@ tmp-page-*
 tmp-probe-*
 *.lock.tmp
 data/public/.problems.lock
+.run/
 data/public/raw/
 data/public/papers/
 *.sqlite3

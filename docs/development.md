@@ -87,7 +87,9 @@ npm --prefix frontend run build
 带参数脚本可先运行 `--help`。不要在正式库直接运行会新建档案的检查。隔离 UI 验证时新开测试目录和服务，**确保原服务已经停止，或检查脚本指向正确的测试端口**：
 
 ```bash
-FEEDBACK_DATA_DIR="$PWD/tmp/ui-check-data" bash scripts/start.sh
+FEEDBACK_DATA_DIR="$PWD/tmp/ui-check-data" .venv/bin/python scripts/service.py start
+# 完成检查后正常关闭；更改环境变量前同样需要重启。
+.venv/bin/python scripts/service.py stop
 ```
 
 自动测试通过不能覆盖未来 OJ 页面变化或所有模型返回。新改动只运行与其有关的必要检查；涉及 PDF 布局时运行 `check_pdf.py` 并查看实际渲染，不能仅凭页数通过。
