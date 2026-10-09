@@ -53,7 +53,7 @@ export function PracticeArchive({api,id,onBack,onFeedback}) {
   if(!entry)return <div className="empty">正在读取做题档案…</div>;
   const data=entry.content;
   return <><div className="page-title"><div><div className="eyebrow">PERSISTED STUDY RECORD</div><h1>{entry.name}的做题档案</h1><p>{entry.start_date} — {entry.end_date} · {data.problems.length} 道题（{data.problems.filter(p=>(p.submission_state||'submitted')!=='submitted').length} 道本期无提交） · {data.problems.reduce((n,p)=>n+p.submissions.length,0)} 次提交</p></div><button onClick={onBack}>返回学生档案</button></div>
-  <section className="panel"><div className="panel-head"><h2>已保存的作品与提交过程</h2><button className="primary" disabled={!selected.length} onClick={()=>onFeedback(entry,selected.map(i=>data.problems[i]))}>用所选 {selected.length} 道题新建反馈</button></div><p className="hint">全部题面与可取得的代码版本保存在档案中，题目和提交次数不设数量上限。点击题目展开详情；独立完成条件可在反馈表单里调整。</p>
+  <section className="panel"><div className="panel-head"><h2>已保存的作品与提交过程</h2><button className="primary" disabled={!selected.length} onClick={()=>onFeedback(entry,selected.map(i=>data.problems[i]))}>用所选 {selected.length} 道题生成本期反馈</button></div><p className="hint">同一学生、同一学习时段已有报告时更新原报告。全部题面与可取得的代码版本保存在档案中，题目和提交次数不设数量上限。点击题目展开详情；独立完成条件可在反馈表单里调整。</p>
   <SelectionActions total={data.problems.length} selected={selected} onChange={setSelected}/>
   {[...new Set(data.warnings)].map((w,i)=><p className="hint" key={i}>{w}</p>)}
   {(data.failed_tasks||[]).map((f,i)=><div className="notice amber" key={i}>{f.kind==='homework'?'作业':'比赛'} {f.task_id} 读取失败：{f.message}；其余成功任务已保存。</div>)}

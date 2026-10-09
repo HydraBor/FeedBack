@@ -37,6 +37,19 @@ def test_same_name_separate_and_snapshot(database):
     db.save_student(profile("后来改名"), a["id"])
     assert db.feedback(f["id"])["student_snapshot"]["name"] == "测试同学"
 
+
+def test_report_list_reuses_same_student_and_period(database):
+    student=db.save_student(profile())
+    a=db.create_feedback(payload(student['id']))
+    data=payload(student['id']);data['tracks']=['S']
+    b=db.create_feedback(data)
+    client=TestClient(app,base_url='http://localhost')
+    rows=client.get('/api/reports',params={'student_id':student['id']}).json()
+    by_id={row['id']:row for row in rows}
+    assert a['id']==b['id'] and len(rows)==1
+    assert by_id[a['id']]['tracks']==['S']
+    assert all(row['created_at'] and 'input' not in row and 'draft' not in row for row in rows)
+
 def test_versions_revision_guard_and_immutable(database):
     s = db.save_student(profile())
     f = db.create_feedback(payload(s["id"]))

@@ -38,7 +38,7 @@
 | `GET /api/practice-archives/{ident}` | 档案完整题面、代码、过程和来源 |
 | `GET /api/reports?student_id=` | 反馈摘要列表 |
 | `POST /api/reports` | 保存反馈输入，尚不触发分析 |
-| `PUT /api/reports/{fid}/input` | 修改尚未开始分析的材料草稿 |
+| `PUT /api/reports/{fid}/input` | 按 revision 修改本期材料，变更后清除旧分析、等待重新分析 |
 | `GET /api/reports/{fid}` | 输入、阶段、分析、草稿、错误、revision 与确认版本 |
 | `POST /api/reports/{fid}/generate` | 开始或恢复分析 |
 | `PUT /api/reports/{fid}/review?confirm=` | 保存审核；`confirm=true` 新增确认版本 |
@@ -120,7 +120,9 @@
 
 导入档案作品时，将选中 `content.problems` 放入 `problems`，保留原 `source`、提交与完成条件。平台采集时段必须与本期日期一致，学生 ID 与档案归属必须匹配；不要只复制主代码、丢掉来源或把修改代码继承成原 AC。
 
-创建返回反馈 `id`。向 `/api/reports/{id}/generate` POST `{}`，再 GET 反馈查看状态与阶段。失败时再次 generate 恢复，已通过的阶段复用；`review` 表示分析完成待审核，不能继续调用 generate 重新评估材料。
+创建返回反馈 `id`。同一 `student_id + start_date + end_date + mode` 只保留一份当前报告：相同输入复用原 ID 和分析；输入改变时覆盖本期材料、增加 revision、清除旧分析缓存并回到 `draft`，完整旧稿和确认版本保留。不同学习时段分别保存；演示模式与真实报告隔离。分析或文案更新进行中拒绝替换材料。
+
+仅在返回状态为 `draft` 或 `failed` 时，向 `/api/reports/{id}/generate` POST `{}`，再 GET 反馈查看状态与阶段；已完成或正在运行时直接打开原报告。失败时再次 generate 恢复，已通过的阶段复用。修改已有报告推荐 PUT `/input`，携带最新 revision，学生、时段及模式不能改变。
 
 更新文案请求：
 
@@ -128,7 +130,9 @@
 {"refresh_training": true}
 ```
 
-发送到 `/api/reports/{id}/rewrite`；`false` 仅改家长文字、保留训练建议，默认 `true` 刷新建议。评分与等级不重新计算。需已有真实分析，演示模式不支持这个入口。
+发送到 `/api/reports/{id}/rewrite`；`false` 仅改家长文字、保留训练建议，默认 `true` 刷新建议。覆盖当前报告的文字与建议，ID 与列表数量不变，评分与等级不重新计算，原确认版本仍在该报告内部。需已有真实分析，演示模式不支持这个入口。
+
+旧版本重复报告在启动时保留最近创建的一份作为当前报告，其余旧稿用 `superseded_by` 指向它并从列表移除，不删除原始材料或确认文件。GET 旧报告返回这个字段，界面自动打开当前报告；旧稿的修改接口拒绝写入。当前报告的 `versions` 同时列出合并前的确认版本，下载与预览仍使用各版本原始材料和 HTML 快照。
 
 保存审核时从详情取得 `draft` 完整对象与最新 `revision`，编辑后发送到 `/review`。`report` 必须是符合 `ParentReport` 的完整对象，可用 JavaScript 构造：
 

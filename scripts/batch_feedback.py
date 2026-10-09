@@ -124,7 +124,8 @@ def main():
                             report = request('POST', '/api/reports', build_report(archive, config))
                             importing.update(report_id=report['id'], phase='analyzing')
                             write_private(args.state, state)
-                            request('POST', '/api/reports/' + report['id'] + '/generate', {})
+                            if report['status'] in ('draft','failed'):
+                                request('POST', '/api/reports/' + report['id'] + '/generate', {})
                     elif job['status'] in ('failed', 'cancelled'):
                         importing.update(phase='import_failed', error=job['error'])
 

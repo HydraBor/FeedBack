@@ -100,10 +100,19 @@ def test_initial_generation_and_rewrite_retry_in_the_same_approved_voice(tmp_pat
     assert first['status']=='review',first['error']
     assert first['analysis']['versions']['parent_style']==STYLE_ID
     scores=deepcopy(first['draft']['topic_scores']);positions=deepcopy(first['draft']['positions'])
+    confirmed=db.save_review(entry['id'],first['revision'],first['draft'],{},True)
+    original_versions=deepcopy(db.versions(entry['id']))
+    sibling=db.create_feedback({**data,'start_date':'2026-09-01','end_date':'2026-09-05','tracks':['S']})
+    report_ids={r['id'] for r in db.list_feedbacks()}
     asyncio.run(pipeline.rewrite_parent_copy(entry['id'],refresh_training=False))
     second=db.feedback(entry['id'])
     assert second['status']=='review' and second['error'] is None
     assert second['draft']['topic_scores']==scores and second['draft']['positions']==positions
+    assert second['id']==entry['id'] and second['student_id']==student['id']
+    assert second['revision']==confirmed['revision']+1
+    assert {r['id'] for r in db.list_feedbacks()}==report_ids
+    assert len(db.students())==1 and db.feedback(sibling['id'])==sibling
+    assert db.versions(entry['id'])==original_versions
     assert second['analysis']['copy_refreshes'][-1]['parent_style']==STYLE_ID
     assert len(instructions)==4
     assert instructions[0]==instructions[2]

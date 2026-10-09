@@ -46,7 +46,9 @@ ACGO 复用了原爬虫的 MIT 辅助代码，来源版本和许可见 [SOURCE.j
 
 报告状态为 `draft → running → review → confirmed`。失败转 `failed`，恢复再次进入 `running`；成功文案更新回 `review`。重启把尚在 `running` 的报告标记为可恢复。采集任务状态 `running / completed / failed / cancelled` 存内存，完成预览最多保留约一小时，重启后失效；已保存做题档案仍在数据库。
 
-`feedbacks.stages` 保存每题、分批汇总、每年卷、训练和文案，以及历史、词表、规则、题单、参考卷快照。恢复前检查缓存结构和依据，只复用有效结果。输入材料仅在分析尚未开始的 `draft` 可修改，开始后另建反馈。保存审核携带当前 `revision`，成功加一，旧 revision 拒绝。
+`feedbacks.stages` 保存每题、分批汇总、每年卷、训练和文案，以及历史、词表、规则、题单、参考卷快照。恢复前检查缓存结构和依据，只复用有效结果。同一学生、学习起止日期和模式通过 SQLite 部分唯一索引约束一份当前报告。POST 相同材料复用原记录；材料改变则完整旧稿标记 `superseded_by` 归档、覆盖原记录并清空分析缓存，revision 加一。不同学习时段独立保存。PUT 材料与审核均校验 revision，分析运行中拒绝替换，任务启动使用 revision 条件更新防止并发覆盖。
+
+启动时迁移旧重复报告：最近创建的一份作为当前报告，其余保留原始记录并指向当前报告，不再参与列表计数。确认版本仍保留原 ID 与内容，当前报告统一列出所属旧稿的确认版本。版本 metadata 保存 material_snapshot；旧确认版通过原反馈或带 `_material_snapshot_of` 标记的材料归档恢复上下文，避免新材料被用于旧版预览、下载或历史分析。删除学生与备份须包括被替换记录。
 
 确认版内容写入 `versions`，HTML 写入私有 `html/`，首次下载 PDF 写入 `pdf/` 并缓存。模板变化不会回写旧快照。新增排版需新确认版本；不要直接修改确认版文件。
 
@@ -85,6 +87,8 @@ npm --prefix frontend run build
 | `check_analysis_ui.py` | 只读指定反馈界面，以浏览器拦截结果验证进度与设置；不保存设置 |
 
 带参数脚本可先运行 `--help`。不要在正式库直接运行会新建档案的检查。隔离 UI 验证时新开测试目录和服务，**确保原服务已经停止，或检查脚本指向正确的测试端口**：
+
+`scripts/check_report_period_ui.py` 自带临时数据库、独立端口和模拟 AI，可以在正式服务运行时执行：`.venv/bin/python scripts/check_report_period_ui.py`。验证更新文案不新增记录、同一期复用 ID、修改材料重置分析、确认版本保留，不读写真实学生库或调用外部 AI。
 
 ```bash
 FEEDBACK_DATA_DIR="$PWD/tmp/ui-check-data" .venv/bin/python scripts/service.py start

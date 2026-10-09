@@ -58,10 +58,12 @@ async def local_only(request: Request, call_next):
 async def invalid(request, exc):
     return Response(json.dumps({"detail": str(exc)}, ensure_ascii=False), status_code=400, media_type="application/json")
 
-def require_feedback(fid):
+def require_feedback(fid, current=False):
     entry = db.feedback(fid)
     if not entry:
         raise HTTPException(404, "反馈不存在")
+    if current and entry["superseded_by"]:
+        raise ValueError("这份旧稿已合并，请打开本期当前报告")
     return entry
 
 @app.get("/api/health")
@@ -156,7 +158,7 @@ async def delete_student(sid: str, data: dict):
         raise HTTPException(404, "学生不存在")
     if data.get("confirm_name") != student["name"]:
         raise ValueError("请输入完整姓名确认删除")
-    entries = db.list_feedbacks(sid)
+    entries = db.list_feedbacks(sid, include_replaced=True)
     if any(f["id"] in jobs and not jobs[f["id"]].done() for f in entries):
         raise ValueError("请等分析完成后再删除")
     await acgo.forget_student(sid)
@@ -169,7 +171,7 @@ async def delete_student(sid: str, data: dict):
 
 @app.get("/api/reports")
 def reports(student_id: str | None = None):
-    return [{k: v for k, v in f.items() if k not in ("stages", "analysis", "draft", "input", "student_snapshot")} | {"period": f["input"]["start_date"] + " — " + f["input"]["end_date"], "mode": f["input"]["mode"]} for f in db.list_feedbacks(student_id)]
+    return [{k: v for k, v in f.items() if k not in ("stages", "analysis", "draft", "input", "student_snapshot")} | {"period": f["input"]["start_date"] + " — " + f["input"]["end_date"], "mode": f["input"]["mode"], "tracks": f["input"]["tracks"]} for f in db.list_feedbacks(student_id)]
 
 @app.post("/api/reports")
 def create_report(data: FeedbackInput):
@@ -200,7 +202,7 @@ def prepare_materials(data: FeedbackInput):
 
 @app.put("/api/reports/{fid}/input")
 def edit_materials(fid: str, data: MaterialsEdit):
-    require_feedback(fid)
+    require_feedback(fid, current=True)
     prepare_materials(data.input)
     return db.save_materials(fid, data.revision, data.input.model_dump(mode="json"))
 
@@ -214,14 +216,14 @@ def report_detail(fid: str):
 
 @app.post("/api/reports/{fid}/generate")
 async def analyze(fid: str, data: dict):
-    entry = require_feedback(fid)
+    entry = require_feedback(fid, current=True)
     if fid in jobs and not jobs[fid].done():
         return {"status": "running"}
     if entry["status"] not in ("draft", "failed"):
-        raise ValueError("分析已完成；修改材料请另建本期反馈，当前版本保留")
+        raise ValueError("分析已完成；需要重新评估请先修改本期材料，或只更新建议与文案")
     if entry["input"]["mode"] == "live" and not settings()["api_key"]:
         raise ValueError("请先在设置中填写 DeepSeek API 密钥，或新建明确标注的演示反馈")
-    db.update_feedback(fid, status="running", stage="等待分析任务")
+    db.start_job(fid, entry["revision"], "等待分析任务")
     async def work():
         async with queue:
             await generate(fid)
@@ -230,7 +232,7 @@ async def analyze(fid: str, data: dict):
 
 @app.put("/api/reports/{fid}/review")
 def review(fid: str, data: ReviewInput, confirm: bool = False):
-    entry = require_feedback(fid)
+    entry = require_feedback(fid, current=True)
     if not entry["draft"]:
         raise ValueError("尚无可审核报告")
     content = data.report.model_dump()
@@ -269,7 +271,7 @@ def review(fid: str, data: ReviewInput, confirm: bool = False):
 
 @app.post("/api/reports/{fid}/rewrite")
 async def rewrite_report(fid: str, data: dict):
-    entry = require_feedback(fid)
+    entry = require_feedback(fid, current=True)
     if fid in jobs and not jobs[fid].done():
         return {"status": "running"}
     if not entry["draft"] or not entry["analysis"] or entry["input"]["mode"] != "live":
@@ -277,7 +279,7 @@ async def rewrite_report(fid: str, data: dict):
     refresh_training = data.get("refresh_training", True)
     if type(refresh_training) is not bool:
         raise ValueError("refresh_training 请使用布尔值")
-    db.update_feedback(fid, status="running", stage="等待更新文案与建议", error=None)
+    db.start_job(fid, entry["revision"], "等待更新文案与建议")
     async def work():
         async with queue:
             await rewrite_parent_copy(fid, refresh_training)
@@ -292,7 +294,7 @@ def preview(fid: str, version_id: str | None = None):
         if not version:
             raise HTTPException(404, "确认版本不存在")
         snapshot = DATA / "html" / f"{version['id']}.html"
-        return snapshot.read_text(encoding="utf-8") if snapshot.exists() else render(entry, version["content"], version["revision"])
+        return snapshot.read_text(encoding="utf-8") if snapshot.exists() else render(db.version_context(entry,version), version["content"], version["revision"])
     if not entry["draft"]:
         raise ValueError("请先完成分析")
     return render(entry, entry["draft"])
@@ -311,7 +313,7 @@ async def download_pdf(fid: str, vid: str):
     if not version:
         raise HTTPException(404, "确认版本不存在")
     try:
-        path = await save_version(entry, version)
+        path = await save_version(db.version_context(entry,version), version)
     except Exception:
         raise HTTPException(503, "PDF 渲染失败；请检查 Chromium 运行依赖。已确认文字仍保留，可重试下载。")
     with db.connection() as conn:
