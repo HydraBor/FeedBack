@@ -12,7 +12,7 @@ jobs:
   checks:
     runs-on: ubuntu-latest
     env:
-      FEEDBACK_DATA_DIR: ${{ runner.temp }}/feedback-test-data
+      FEEDBACK_DATA_DIR: /tmp/feedback-test-data
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
