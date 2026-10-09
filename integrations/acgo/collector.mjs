@@ -3,7 +3,7 @@
 import {chromium} from 'playwright-core';
 import {writeFileSync} from 'node:fs';
 import {buildQuestionDataUrl,problemFromNextData} from './vendor/problem-data.mjs';
-import {parseJSON,exactId,safeNumber,periodRecords,submissionOf,materialOf,findStudent,contestOrder,isSectionMarker} from './core.mjs';
+import {parseJSON,exactId,safeNumber,periodRecords,submissionOf,materialOf,findStudent,memberRoster,contestOrder,isSectionMarker} from './core.mjs';
 
 const emit=value=>process.stdout.write(JSON.stringify(value)+'\n');
 const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
@@ -188,6 +188,24 @@ export async function collect(config) {
   }finally{store.dispose();await ownPage.close().catch(()=>{});ownPage=null}
   // No browser.close(): disconnecting this worker must leave the lecturer's window alive.
 }
+export async function collectMembers(config) {
+  const teamId=exactId(config.team_id),groupId=exactId(config.group_id);
+  const browser=await chromium.connectOverCDP(`http://127.0.0.1:${config.cdp_port}`,{timeout:10000});
+  const context=browser.contexts()[0];
+  if(!context)throw new Error('未找到可用浏览器会话');
+  ownPage=await context.newPage();const store=captureHeaders(ownPage);
+  try {
+    await goto(ownPage,`https://www.acgo.cn/team/${teamId}/members`);
+    const api=apiFor(context,store);
+    const tree=await api.get(`/acgoAccount/api/team/${teamId}/group/tree`);
+    const find=node=>String(node.groupId)===groupId?node:(node.childrenList||[]).map(find).find(Boolean);
+    const group=find(tree);
+    if(!group)throw new Error('团队中没有指定分组');
+    const members=await memberRoster({groupId,loadPage:page=>api.get(`/acgoAccount/api/team/${teamId}/group/teamUserList`,
+      {teamCode:teamId,groupId,page:String(page),pageSize:'100'})});
+    return {team_id:teamId,group_id:groupId,group_name:group.groupName,members};
+  } finally {store.dispose();await ownPage.close().catch(()=>{});ownPage=null;}
+}
 async function main() {
   let input='';for await(const chunk of process.stdin){input+=chunk;if(input.length>20000)throw new Error('导入参数过大')}
   const config=JSON.parse(input);
@@ -195,7 +213,7 @@ async function main() {
     try{const response=await fetch(`http://127.0.0.1:${config.cdp_port}/json/version`,{signal:AbortSignal.timeout(3000)});if(!response.ok)throw Error();await response.json();emit({type:'result',result:{connected:true}})}
     catch{emit({type:'result',result:{connected:false}})}
   }else {
-    const result=await collect(config);
+    const result=config.operation==='team_members'?await collectMembers(config):await collect(config);
     if(config.output_path){writeFileSync(config.output_path,JSON.stringify(result),'utf8');emit({type:'result-file'})}
     else emit({type:'result',result});
   }

@@ -70,6 +70,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\start-acgo-edge.ps1
 | 文档 | 内容 |
 | --- | --- |
 | [使用手册](docs/user-guide.md) | 建档、日期、多平台导入、恢复分析、审核、PDF 和日常问题 |
+| [同班学生批量反馈](docs/batch-feedback.md) | 分组名单、相同作业比赛、跳过已有报告和批次恢复 |
 | [部署、配置与维护](docs/operations.md) | 安装、启动、密钥、备份恢复、连接故障和资料更新 |
 | [评估依据与数据规则](docs/assessment.md) | 完成条件、未提交、评分、历史资料、历年 CSP 定位及审核开放条件 |
 | [家长反馈写作规则](docs/parent-feedback-writing.md) | A 版文风、完整提示词链路、证据与自然语言要求 |

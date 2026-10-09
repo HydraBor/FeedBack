@@ -136,6 +136,25 @@ export async function findStudent({loadPage,records,total,userId,idOf,maxPages=5
   }
   throw new Error('未在此作业或比赛中找到指定 ACGO 学生 ID，请检查团队、任务和访问权限');
 }
+export async function memberRoster({loadPage,groupId}) {
+  const members=[],seen=new Set();let expected;
+  for(let page=1;;page++) {
+    const data=await loadPage(page), rows=data?.list;
+    const count=Number(data?.totalCount);
+    if(!Array.isArray(rows)||!Number.isSafeInteger(count)||count<0)throw new Error('团队成员列表格式发生变化');
+    if(expected!==undefined&&expected!==count)throw new Error('采集期间成员人数变化，请重新读取名单');
+    expected=count;
+    for(const row of rows) {
+      const userId=exactId(row.userId);
+      if(seen.has(userId))throw new Error('成员分页出现重复，无法确认完整名单');
+      if(String(row.groupId)!==String(groupId))throw new Error('成员分组与请求不一致');
+      seen.add(userId);
+      members.push({user_id:userId,name:String(row.teamUserName||'').trim()});
+    }
+    if(members.length===expected)return members;
+    if(!rows.length||members.length>expected)throw new Error('团队成员分页不完整，请重试');
+  }
+}
 export function contestOrder(questions,pageQuestions,links,student) {
   const rawProblems=links.map(q=>({questionId:q.publicId,url:`https://www.acgo.cn/problemset/info/${q.publicId}`}));
   return resolveContestQuestionOrder({apiQuestions:questions,pageQuestions,rawProblems,rankingRecords:[student]});
